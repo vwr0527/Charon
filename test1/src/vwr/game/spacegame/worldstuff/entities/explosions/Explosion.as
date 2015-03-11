@@ -1,4 +1,4 @@
-package vwr.game.spacegame.worldstuff.entities 
+package vwr.game.spacegame.worldstuff.entities.explosions 
 {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
@@ -27,6 +27,7 @@ package vwr.game.spacegame.worldstuff.entities
 		private var darkc:Sprite;
 		
 		private var counter:Number = 0;
+		private var speed:Number = 1.0;
 		
 		public function Explosion() 
 		{
@@ -55,6 +56,10 @@ package vwr.game.spacegame.worldstuff.entities
 			addChildAt(darkc, 0);
 			darkc.addChild(dark);
 			
+			speed = 0.7;
+			scaleX = 1.8;
+			scaleY = 1.8;
+			
 			super();
 		}
 		
@@ -62,7 +67,7 @@ package vwr.game.spacegame.worldstuff.entities
 		{
 			if (counter > 0)
 			{
-				counter -= 1 * ((Math.random() / 2) + 0.5);
+				counter -= speed * ((Math.random() / 2) + 0.5);
 				visible = true;
 				alpha = counter / 15;
 				
@@ -75,12 +80,31 @@ package vwr.game.spacegame.worldstuff.entities
 				medc.alpha = counter / 30;
 				darkc.scaleX = darkc.scaleY = 0.8 + ((30 - counter) / 20);
 				darkc.alpha = shock / 14;
-				bangc.scaleX = bangc.scaleY = 0.35 + Math.max(0,(counter - 25) / 3);
+				bangc.scaleX = bangc.scaleY = 0.2 + Math.max(0,(counter - 26) / 2);
 				bangc.alpha = Math.max(0, (counter - 25) / 4);
 			}
 			else
 			{
 				visible = false;
+			}
+		}
+		
+		public function SetExplosionSize(type:int):void
+		{
+			switch (type)
+			{
+				case 0:
+					scaleX = scaleY = 1.0;
+					speed = 0.9;
+					break;
+				case 1:
+					scaleX = scaleY = 1.8;
+					speed = 0.7;
+					break;
+				case 2:
+					scaleX = scaleY = 2.5;
+					speed = 0.5;
+					break;
 			}
 		}
 		

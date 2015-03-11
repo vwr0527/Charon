@@ -3,6 +3,9 @@ package vwr.game.spacegame
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	import vwr.game.spacegame.worldstuff.entities.*;
+	import vwr.game.spacegame.worldstuff.entities.explosions.*;
+	import vwr.game.spacegame.worldstuff.entities.shots.Laser;
+	import vwr.game.spacegame.worldstuff.entities.shots.Plasma;
 	import vwr.game.spacegame.worldstuff.entities.shots.SlowRedLaser;
 	import vwr.game.spacegame.worldstuff.Entity;
 	import vwr.game.spacegame.worldstuff.Room;
@@ -70,7 +73,7 @@ package vwr.game.spacegame
 			shotList = new Array();
 			for (var i:int = 0; i < 50; ++i)
 			{
-				var newshot:Shot = new Shot();
+				var newshot:Shot = new Laser();
 				activeEntityList.push(newshot);
 				addChild(newshot);
 				shotList.push(newshot);
@@ -89,12 +92,22 @@ package vwr.game.spacegame
 			enemyShotList = new Array();
 			for (i = 0; i < 100; ++i)
 			{
-				var redshot:SlowRedLaser = new SlowRedLaser();
+				var redshot:Shot = new Plasma();//TODO: Different types of enemy shots
 				enemyShotList.push(redshot);
 				addChild(redshot);
 				activeEntityList.push(redshot);
+				var droneshot:Shot = new SlowRedLaser();
+				addChild(droneshot);
+				activeEntityList.push(droneshot);
+				enemyShotList.push(droneshot);
 			}
 		}
+		
+		// DIFFERENT TYPES DILLEMA
+		// does each different type need it's own list?
+		// how can we combine different types of ents into one list?
+		// IDEAL SPAWNING FCN:
+		//    Spawn( "what thing", "thing's props" );
 		
 		public function Update():void
 		{
@@ -129,6 +142,7 @@ package vwr.game.spacegame
 					(ent as Enemy).HandleShooting(ShootEnemyLaser);
 				}
 			}
+			
 			//shots check if hit enemies
 			for each(var shot:Shot in shotList)
 			{
@@ -193,25 +207,27 @@ package vwr.game.spacegame
 			}
 		}
 		
-		private function ShootEnemyLaser(xpos:Number, ypos:Number, dir:Number):void
+		private function ShootEnemyLaser(xpos:Number, ypos:Number, dir:Number, type:int):void
 		{
 			for (var i:int = 0; i < enemyShotList.length; ++i)
 			{
-				if ((enemyShotList[i] as SlowRedLaser).Shoot(xpos,ypos,dir))
+				if ((enemyShotList[i] as Shot).GetType() != type) continue;
+				if ((enemyShotList[i] as Shot).Shoot(xpos,ypos,dir))
 				{
-					(enemyShotList[i] as SlowRedLaser).Update();
-					(enemyShotList[i] as SlowRedLaser).CollideTiles(currentRoom);
+					(enemyShotList[i] as Shot).Update();
+					(enemyShotList[i] as Shot).CollideTiles(currentRoom);
 					break;
 				}
 			}
 		}
 		
-		private function CreateExplosion(x:Number, y:Number, exlosiontype:int):void
+		private function CreateExplosion(x:Number, y:Number, size:int):void
 		{
 			for (var i:int = 0; i < explosionList.length; ++i)
 			{
-				if ((explosionList[i] as Explosion).ExplodeAt(x, y))
+				if (explosionList[i].ExplodeAt(x, y))
 				{
+					explosionList[i].SetExplosionSize(size);
 					break;
 				}
 			}

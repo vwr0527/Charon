@@ -5,6 +5,8 @@ package vwr.game.spacegame.worldstuff.entities
 	import flash.display.Sprite;
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	import vwr.game.spacegame.worldstuff.Entity;
 	import vwr.game.spacegame.Input;
 	import flash.events.MouseEvent;
@@ -59,6 +61,9 @@ package vwr.game.spacegame.worldstuff.entities
 		private var shieldHitAnim:int = 0;
 		private var shotFromDir:Number = 0;
 		private var shieldDamageTaken:Number = 0;
+		
+		private var infotext:TextField;
+		private var textContainer:Sprite;
 		
 		public function Player() 
 		{
@@ -149,6 +154,20 @@ package vwr.game.spacegame.worldstuff.entities
 			shieldSprite.scaleY = 1.4;
 			shieldSprite.y -= 5;
 			addChild(shieldSprite);
+			
+			infotext = new TextField();
+			infotext.textColor = 0xAAFFFF;
+			var fmt:TextFormat = new TextFormat();
+			fmt.font = "System";
+			infotext.defaultTextFormat = fmt;
+			textContainer = new Sprite();
+			textContainer.addChild(infotext);
+			infotext.x += 20;
+			infotext.y += 10;
+			textContainer.scaleX = 2;
+			textContainer.scaleY = 2;
+			addChild(textContainer);
+			infotext.text = "000";
 			
 			//showhitbox = true;
 			hitwidth = 30;
@@ -255,8 +274,10 @@ package vwr.game.spacegame.worldstuff.entities
 					}
 				}
 			}
+			infotext.text = "" + shield + "|" + armor;
 			
 			super.Update();
+			textContainer.rotation = -rotation;
 		}
 		
 		private function HandleShieldAnimation():void 
@@ -351,7 +372,7 @@ package vwr.game.spacegame.worldstuff.entities
 			yvel += (eshot.y - eshot.py) * 0.03;
 			if (shield > 0)
 			{
-				shield -= eshot.GetDamage();
+				shield = Math.max(shield - eshot.GetDamage(), 0);
 				shieldDamageTaken = eshot.GetDamage();
 				shieldBroke = 0;
 				shieldRechargeCounter = -shieldRechargeTime;
@@ -360,7 +381,7 @@ package vwr.game.spacegame.worldstuff.entities
 			}
 			else
 			{
-				armor -= eshot.GetDamage();
+				armor = Math.max(armor - eshot.GetDamage(), 0);
 				if (shieldBroke == 0)
 				{
 					shieldBroke = 1;

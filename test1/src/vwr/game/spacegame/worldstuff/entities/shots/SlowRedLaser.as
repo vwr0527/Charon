@@ -7,13 +7,13 @@ package vwr.game.spacegame.worldstuff.entities.shots
 	 * ...
 	 * @author Victor Reynolds
 	 */
-	public class SlowRedLaser extends Shot 
+	public class SlowRedLaser extends Laser 
 	{
 		public function SlowRedLaser() 
 		{
 			super();
-
-			damage = 2;
+			
+			damage = 1;
 			speed = 15;
 			laserSize = 0.4;
 			laserLengthFactor = 0.07;
@@ -29,6 +29,11 @@ package vwr.game.spacegame.worldstuff.entities.shots
 			pic2.x = -(pic2.bitmapData.width / 2) * impactSize;
 			pic2.y = -(pic2.bitmapData.height / 2) * impactSize;
 			pic2.bitmapData.colorTransform(pic2.bitmapData.rect, new ColorTransform(1.2, 2, 2, 1, 0, -250, -250, 0));
+		}
+		
+		public override function GetType():int
+		{
+			return 2;
 		}
 	}
 }
