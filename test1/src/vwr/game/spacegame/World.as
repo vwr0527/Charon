@@ -25,6 +25,8 @@ package vwr.game.spacegame
 			//trace ("Hello" + sequenceNumber);
 			++sequenceNumber;
 			player.Update();
+			//x = (stage.stageWidth / 2) - player.x;
+			//y = (stage.stageHeight / 2) - player.y;
 		}
 	}
 

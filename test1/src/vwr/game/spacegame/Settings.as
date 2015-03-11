@@ -6,12 +6,6 @@ package vwr.game.spacegame
 	 */
 	public class Settings 
 	{
-		
-		public function Settings() 
-		{
-			
-		}
-		
+		public static const UPDATE_FREQUENCY:Number = 59;
 	}
-
 }
