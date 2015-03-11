@@ -23,6 +23,7 @@ package vwr.game.spacegame.worldstuff
 		private var hitboxGraphic:Shape;
 		public var noclip:Boolean = true;
 		public var showhitbox:Boolean = false;
+		private var extraPush:Number = 0.1;
 		
 		public function Entity() 
 		{
@@ -209,27 +210,21 @@ package vwr.game.spacegame.worldstuff
 			
 			if (bottomhit && righthit && !pbottomhit && !prighthit && !on_topwall && !on_leftwall && dx > 0 && dy > 0)
 			{
-				trace("PONG");
 				DoCornerBounce(x + (hitwidth / 2), y + (hitheight / 2), tile.x, tile.y);
 			}
 			else
 			if (bottomhit && lefthit && !pbottomhit && !plefthit && !on_topwall && !on_rightwall && dx < 0 && dy > 0)
 			{
-				trace("ping");
 				DoCornerBounce(x - (hitwidth / 2), y + (hitheight / 2), tile.x + tile.width, tile.y);
 			}
 			else
 			if (tophit && righthit && !ptophit && !prighthit && !on_bottomwall && !on_leftwall && dx > 0 && dy < 0)
 			{
-				trace("BANG");
-				//prighthit = (px + hitwidth / 2) > tile.x + extraPush && (px + hitwidth / 2) < tile.x + tile.width - extraPush;
-				trace((px + hitwidth / 2) +">"+ (tile.x + extraPush) +"&&"+ (px + hitwidth / 2) +"<"+ (tile.x + tile.width - extraPush));
 				DoCornerBounce(x + (hitwidth / 2), y - (hitheight / 2), tile.x, tile.y + tile.height);
 			}
 			else
 			if (tophit && lefthit && !ptophit && !plefthit && !on_bottomwall && !on_rightwall && dx < 0 && dy < 0)
 			{
-				trace("bong");
 				DoCornerBounce(x - (hitwidth / 2), y - (hitheight / 2), tile.x + tile.width, tile.y + tile.height);
 			}
 			else
@@ -280,12 +275,10 @@ package vwr.game.spacegame.worldstuff
 				if (dy > 0)
 				{
 					BounceX(tileCornerX - entityCornerX);
-					trace("a");
 				}
 				else
 				{
 					BounceY(tileCornerY - entityCornerY);
-					trace("b");
 				}
 			}
 			else
@@ -293,110 +286,14 @@ package vwr.game.spacegame.worldstuff
 				if (dy > 0)
 				{
 					BounceY(tileCornerY - entityCornerY);
-					trace("c");
 				}
 				else
 				{
 					BounceX(tileCornerX - entityCornerX);
-					trace("d");
 				}
 			}
 		}
-		/*
-		 * 
-		 * 
-		 * 
-			var onxwall:Boolean = false;// Math.abs((px + hitwidth / 2) - (tile.x - extraPush)) < extraPush * 2 || Math.abs((px - hitwidth / 2) - (tile.x + tile.width + extraPush)) < extraPush * 2;
-			var onywall:Boolean = false;// Math.abs((py + hitheight / 2) - (tile.y - extraPush)) < extraPush * 2 || Math.abs((py - hitheight / 2) - (tile.y + tile.height + extraPush)) < extraPush * 2;
-			
-		private function HitTile(tile:Tile):void
-		{
-			if (tile == null) return;
-			if (tile.noclip) return;
-			if (tile is DiagTile)
-			{
-				HitDiagTile(tile as DiagTile);
-				return;
-			}
-			
-			var dx:Number = x - px;
-			var dy:Number = y - py;
-			
-			// if movement is downright
-			if (dx >= 0 && dy >= 0)
-			{
-				//trace("a");
-				DoCornerBounce(x + (hitwidth / 2), y + (hitheight / 2), tile.x,				 tile.y,				 dx, dy);
-			}
-			else
-			// if movement is downleft
-			if (dx <= 0 && dy >= 0)
-			{
-				//trace("b");
-				DoCornerBounce(x - (hitwidth / 2), y + (hitheight / 2), tile.x + tile.width, tile.y,				 dx, dy);
-			}
-			else
-			// if movement is upright
-			if (dx >= 0 && dy <= 0)
-			{
-				//trace("c");
-				DoCornerBounce(x + (hitwidth / 2), y - (hitheight / 2), tile.x,				 tile.y + tile.height,	 dx, dy);
-			}
-			else
-			// if movement is upleft
-			if (dx <= 0 && dy <= 0)
-			{
-				//trace("d");
-				DoCornerBounce(x - (hitwidth / 2), y - (hitheight / 2), tile.x + tile.width, tile.y + tile.height,	 dx, dy);
-			}
-		}
-		private function DoCornerBounce(entityCornerX:Number, entityCornerY:Number, tileCornerX:Number, tileCornerY:Number, deltaX:Number, deltaY:Number):void 
-		{
-			// if entityCornerX exceeds tileCornerX
-			// and entCornerY exceeds tileCornerY
-				//figure out if the cornerpoint crossed the vertical or horizontal
-				//calculate the slope from prevcornerpoint to tilecorner
-				//calculate the slope from prevcornerpoint to currentcornerpoint
-				//if slope2 < slope1, crossed horizontal, else crossed vertical
-			var moveRight:Boolean = (deltaX >= 0);
-			var moveDown:Boolean = (deltaY >= 0);
-			if ((entityCornerX > tileCornerX) == moveRight && (entityCornerY > tileCornerY) == moveDown)
-			{
-				var prevEntityCornerX:Number = entityCornerX - deltaX;
-				var prevEntityCornerY:Number = entityCornerY - deltaY;
-				
-				var prevCornerXInsideTile:Boolean = ((prevEntityCornerX > tileCornerX) == moveRight);
-				var prevCornerYInsideTile:Boolean = ((prevEntityCornerY > tileCornerY) == moveDown);
-				if (prevEntityCornerX == tileCornerX && deltaX < 0) prevCornerXInsideTile = false; //goddamnit
-				if (prevCornerXInsideTile)
-				{
-					BounceY(tileCornerY - entityCornerY);
-				}
-				else if (prevCornerYInsideTile)
-				{
-					BounceX(tileCornerX - entityCornerX);
-				}
-				else
-				{
-					var slopeEntityPrevToCur:Number = (entityCornerY - prevEntityCornerY) / (entityCornerX - prevEntityCornerX);
-					var slopeEntityPrevToTile:Number = (tileCornerY - prevEntityCornerY) / (tileCornerX - prevEntityCornerX);
-					
-					//because if the movement is downleft or upright, the slope is reversed.
-					var xorCornerXYInTile:Boolean = (prevCornerXInsideTile && !prevCornerYInsideTile) || (!prevCornerXInsideTile && prevCornerYInsideTile);
-					
-					if ((slopeEntityPrevToCur < slopeEntityPrevToTile) == xorCornerXYInTile)
-					{
-						BounceX(tileCornerX - entityCornerX);
-					}
-					else
-					{
-						BounceY(tileCornerY - entityCornerY);
-					}
-				}
-			}
-		}
-		*/
-		private var extraPush:Number = 0.1;
+		
 		private function BounceX(pushOut:Number):void 
 		{
 			x = x + pushOut;

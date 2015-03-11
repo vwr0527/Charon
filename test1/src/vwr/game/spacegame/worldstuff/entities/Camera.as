@@ -8,6 +8,7 @@ package vwr.game.spacegame.worldstuff.entities
 	 */
 	public class Camera extends Entity 
 	{
+		public var zoom:Number = 1;
 		
 		public function Camera() 
 		{

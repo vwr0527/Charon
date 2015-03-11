@@ -3,6 +3,7 @@ package vwr.game.spacegame.worldstuff
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.display.Bitmap;
+	import vwr.game.spacegame.worldstuff.entities.Camera;
 	import vwr.game.spacegame.worldstuff.Tile;
 	import vwr.game.spacegame.worldstuff.tiles.*;
 	import vwr.game.spacegame.Main;
@@ -80,8 +81,11 @@ package vwr.game.spacegame.worldstuff
 		
 		public function Update():void
 		{
-			this.bg.x = ((Main.gameWidth / 2) - parent.x) * parralax;
-			this.bg.y = ((Main.gameHeight / 2) - parent.y) * parralax;
+		}
+		public function UpdateBG(camera:Camera):void
+		{
+			this.bg.x = camera.x * parralax;
+			this.bg.y = camera.y * parralax;
 			this.bg.scaleX = this.bg.scaleY = bgScale;
 			this.bg.x -= this.bg.width / 2;
 			this.bg.y -= this.bg.height / 2;
@@ -90,7 +94,7 @@ package vwr.game.spacegame.worldstuff
 			
 			for each (var bgObj:BgObject in bgObjs)
 			{
-				bgObj.Update(parent.x, parent.y);
+				bgObj.Update(camera);
 			}
 		}
 		

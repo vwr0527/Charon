@@ -5,6 +5,8 @@ package vwr.game.spacegame.worldstuff.entities
 	import flash.geom.Point;
 	import vwr.game.spacegame.worldstuff.Entity;
 	import vwr.game.spacegame.Input;
+	import flash.events.MouseEvent;
+	import flash.events.Event;
 	
 	/**
 	 * ...
@@ -54,6 +56,11 @@ package vwr.game.spacegame.worldstuff.entities
 		
 		public override function Update():void
 		{
+			if (stage != null)
+			{
+				stage.addEventListener(MouseEvent.MOUSE_DOWN, mouse_down);
+				stage.addEventListener(MouseEvent.MOUSE_UP, mouse_up);
+			}
 			var diag:Number = speed * 0.707;
 			var skip:Boolean = false;
 			if (!(Input.moveDown() == 1 && Input.moveUp() == 1))
@@ -104,6 +111,19 @@ package vwr.game.spacegame.worldstuff.entities
 			
 			super.Update();
 		}
+		
+		private function mouse_down(e:MouseEvent):void
+		{
+		   isMouseDown = true;
+		}
+		private function mouse_up(e:MouseEvent):void
+		{
+		   isMouseDown = false;
+		}
+		public function MouseDown():Boolean
+		{
+			return isMouseDown;
+		}
+		private var isMouseDown:Boolean = false;
 	}
-
 }

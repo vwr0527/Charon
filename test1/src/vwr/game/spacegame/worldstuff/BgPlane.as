@@ -8,6 +8,7 @@ package vwr.game.spacegame.worldstuff
 	import flash.geom.Point;
 	import com.zehfernando.display.drawPlane;
 	import vwr.game.spacegame.Main;
+	import vwr.game.spacegame.worldstuff.entities.Camera;
 	/**
 	 * ...
 	 * @author Victor Reynolds
@@ -43,20 +44,23 @@ package vwr.game.spacegame.worldstuff
 			p4 = new Point();
 		}
 		
-		public override function Update(worldX:Number, worldY:Number):void
+		public override function Update(camera:Camera):void
 		{
-			calcPointPos(worldX, worldY, parralax, offset, p1);
-			calcPointPos(worldX, worldY, parralax2, offset2, p2);
-			calcPointPos(worldX, worldY, parralax3, offset3, p3);
-			calcPointPos(worldX, worldY, parralax4, offset4, p4);
+			calcPointPos(camera.x, camera.y, parralax, offset, p1);
+			calcPointPos(camera.x, camera.y, parralax2, offset2, p2);
+			calcPointPos(camera.x, camera.y, parralax3, offset3, p3);
+			calcPointPos(camera.x, camera.y, parralax4, offset4, p4);
 			
 			drawPlane(this.graphics, pic.bitmapData, p1, p2, p3, p4);
 		}
 		
 		private function calcPointPos(worldX:Number, worldY:Number, parra:Number, offset:Point, p:Point):void
 		{
-			p.x = ((offset.x * (1 - parra)) - (worldX * parra)) + (Main.gameWidth / 2);
-			p.y = ((offset.y * (1 - parra)) - (worldY * parra)) + (Main.gameHeight / 2);
+			//p.x = ((offset.x * (1 - parra)) - (worldX * parra)) + (Main.gameWidth / 2);
+			//p.y = ((offset.y * (1 - parra)) - (worldY * parra)) + (Main.gameHeight / 2);
+			
+			p.x = ((1 - parra) * ((Main.gameWidth / 2) + offset.x)) + (worldX * parra);
+			p.y = ((1 - parra) * ((Main.gameHeight / 2) + offset.y)) + (worldY * parra);
 		}
 		
 		public static function AlterBitmap(bmp:Bitmap, newWidth:int = 0, newHeight:int = 0, transparency:Boolean = false, matrix:Matrix = null, scaleX:Number = 1, scaleY:Number = 1, startX:Number = 0, startY:Number = 0, rotation:Number = 0, repeating:Boolean = true):Bitmap

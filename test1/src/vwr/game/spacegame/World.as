@@ -24,6 +24,7 @@ package vwr.game.spacegame
 		private var roomList:Array;
 		private var activeEntityList:Array;
 		private var tilesTouching:Array;
+		private var shotArray:Array;
 		
 		private var maxx:Number;
 		private var maxy:Number;
@@ -67,6 +68,15 @@ package vwr.game.spacegame
 			player.y += 100
 			player.xvel = 10;
 			player.yvel = 10;
+			
+			shotArray = new Array();
+			for (var i:int = 0; i < 30; ++i)
+			{
+				var newshot:Shot = new Shot();
+				activeEntityList.push(newshot);
+				addChild(newshot);
+				shotArray.push(newshot);
+			}
 		}
 		
 		public function Update():void
@@ -84,6 +94,17 @@ package vwr.game.spacegame
 				var toAdd:Entity = currentRoom.SpawnPendingEntity();
 				addChild(toAdd);
 				activeEntityList.push(toAdd);
+			}
+			
+			if (player.MouseDown())
+			{
+				if (sequenceNumber % 7 == 0)
+				{
+					for (var i:int = 0; i < shotArray.length; ++i)
+					{
+						if ((shotArray[i] as Shot).Shoot(player.x, player.y, player.rotation)) break;
+					}
+				}
 			}
 			
 			//update all entities
@@ -106,8 +127,10 @@ package vwr.game.spacegame
 			followPoint.y = (cursor.y + (player.y * 2)) / 3;
 			camera.xvel = (followPoint.x - camera.x) / 8;
 			camera.yvel = (followPoint.y - camera.y) / 6;
-			x = Main.gameWidth / 2 - camera.x;
-			y = Main.gameHeight / 2 - camera.y;
+			camera.zoom = 1 - Math.min((Math.pow((player.x - cursor.x) / (stage.stageWidth / stage.stageHeight), 2) + Math.pow(player.y - cursor.y, 2)) / 1500000, 0.125);
+			scaleX = scaleY = camera.zoom;
+			x = (Main.gameWidth / 2) - (camera.x * camera.zoom);
+			y = (Main.gameHeight / 2) - (camera.y * camera.zoom);
 			
 			cursor.x = mouseX;
 			cursor.y = mouseY;
@@ -115,6 +138,7 @@ package vwr.game.spacegame
 			cursor.Update();
 			player.AimAt(cursor.x, cursor.y);
 			
+			currentRoom.UpdateBG(camera);
 			currentRoom.Update();
 		}
 	}
