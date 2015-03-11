@@ -1,0 +1,25 @@
+Space shooter. Title pending.
+
+Possible titles:
+	Charion Event
+
+A top down 2D space shooter. There will be many confined spaces as well as wide open spaces.
+The game is like metroid, with various interconnected rooms. You are exploring a derilict
+alien space station that has been discovered at the edge of the solar system. There are
+human space stations around it, studying it, but they have been attacked and we have lost
+contact with them. **spoilers* player's ship has been created with alien technology*
+
+Engine features:
+	Tile based level design. Certain destructable tiles. Level traps that can move.
+	Square based collision detection. Fast projectiles are lines. Save games, options,
+	difficulty level. On foot levels, jetpack levels.
+	
+Assets needed:
+	Player spaceship. Player spaceship's upgradable parts. Muzzle flash. Bullet casing.
+	Animated thrust plume. Animated projectiles: rockets, plasma. Animated explosions.
+	Metallic tiles, metal level walls, metal doors, interesting foreground and background.
+	Alien tiles, alien walls, alien doors, interesting foreground and background.
+	Trap sprites, robotic sentry, turrets, alien sentries, alien traps, alien destructables.
+	Destrutable astroid dirt, industructable astroid rock.
+	Human in spacesuit 8 directions. Human walking 8 directions. Rampaging robot. Hostile
+	Aliens. On foot cubicles, floor tiles, turrets, crates, walls.

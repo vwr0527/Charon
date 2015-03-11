@@ -1,0 +1,9 @@
+10. Player spaceship has momentum, responds to controls, stops and bounces when hit windows edge.
+20. Player ship faces mouse, but not instantaneously.
+30. Player ship can shoot projectiles.
+40. Random debris in the room that can collide with the player and each other. Destroyed upon shot.
+50. Larger room with camera motion following a point inbetween the player and the crosshair.
+60. 2 Rooms, and a door adjoining.
+70. 3 Rooms, programmable behavior for rooms (one room keeps spawning debris until a fixed amount (20), locked doors, must destroy a generator to unlock one door. That door contains a key which unlocks the third door.
+80. Rooms are data dependent. Can be imported from a file. Each level is one XML file. A level is a collection of rooms.
+90. Create simple sentry enemies. Have them guard the key.
