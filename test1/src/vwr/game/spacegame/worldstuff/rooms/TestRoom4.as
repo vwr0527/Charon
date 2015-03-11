@@ -13,7 +13,6 @@ package vwr.game.spacegame.worldstuff.rooms
 	{
 		[Embed(source = "/../../sprite/bg_blur_dark.png")]
 		private var picture:Class;
-		
 		private var layout:Array = [
 		[5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
 		[5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 5, 0, 0, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 5],

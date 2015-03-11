@@ -24,6 +24,7 @@ package vwr.game.spacegame.worldstuff
 		public var noclip:Boolean = true;
 		public var showhitbox:Boolean = false;
 		private static const extraPush:Number = 0.1;
+		protected var enableHighlightTiles:Boolean = false;
 		
 		public function Entity() 
 		{
@@ -126,7 +127,7 @@ package vwr.game.spacegame.worldstuff
 				if (layer == 0)
 				{
 					this.HitTile(currentRoom.tileGrid[closest_index_y][closest_index_x]);
-					currentRoom.HighlightTile(closest_index_x, closest_index_y);
+					if (enableHighlightTiles) currentRoom.HighlightTile(closest_index_x, closest_index_y);
 					continue;
 				}
 				
@@ -145,7 +146,7 @@ package vwr.game.spacegame.worldstuff
 					if (chosen_index_x <= right_index && chosen_index_x >= left_index && chosen_index_y <= bottom_index && chosen_index_y >= top_index)
 					{
 						this.HitTile(currentRoom.tileGrid[chosen_index_y][chosen_index_x]);
-						currentRoom.HighlightTile(chosen_index_x, chosen_index_y);
+						if (enableHighlightTiles) currentRoom.HighlightTile(chosen_index_x, chosen_index_y);
 					}
 					//right
 					chosen_index_x = closest_index_x + dist_from_center;
@@ -153,7 +154,7 @@ package vwr.game.spacegame.worldstuff
 					if (chosen_index_x <= right_index && chosen_index_x >= left_index && chosen_index_y <= bottom_index && chosen_index_y >= top_index)
 					{
 						this.HitTile(currentRoom.tileGrid[chosen_index_y][chosen_index_x]);
-						currentRoom.HighlightTile(chosen_index_x, chosen_index_y);
+						if (enableHighlightTiles) currentRoom.HighlightTile(chosen_index_x, chosen_index_y);
 					}
 					//bottom
 					chosen_index_x = closest_index_x - alternator;
@@ -161,7 +162,7 @@ package vwr.game.spacegame.worldstuff
 					if (chosen_index_x <= right_index && chosen_index_x >= left_index && chosen_index_y <= bottom_index && chosen_index_y >= top_index)
 					{
 						this.HitTile(currentRoom.tileGrid[chosen_index_y][chosen_index_x]);
-						currentRoom.HighlightTile(chosen_index_x, chosen_index_y);
+						if (enableHighlightTiles) currentRoom.HighlightTile(chosen_index_x, chosen_index_y);
 					}
 					//left
 					chosen_index_x = closest_index_x - dist_from_center;
@@ -169,7 +170,7 @@ package vwr.game.spacegame.worldstuff
 					if (chosen_index_x <= right_index && chosen_index_x >= left_index && chosen_index_y <= bottom_index && chosen_index_y >= top_index)
 					{
 						this.HitTile(currentRoom.tileGrid[chosen_index_y][chosen_index_x]);
-						currentRoom.HighlightTile(chosen_index_x, chosen_index_y);
+						if (enableHighlightTiles) currentRoom.HighlightTile(chosen_index_x, chosen_index_y);
 					}
 				}
 			}
@@ -443,7 +444,6 @@ package vwr.game.spacegame.worldstuff
 			if (x_bounce && y_bounce && !on_ywall && !on_xwall)
 			{
 				DoCornerBounce(exwall, eywall, txwall, tywall);
-				trace("corner bounce");
 			}
 			else if (x_bounce && !on_ywall)
 			{

@@ -24,7 +24,8 @@ package vwr.game.spacegame
 		private var roomList:Array;
 		private var activeEntityList:Array;
 		private var tilesTouching:Array;
-		private var shotArray:Array;
+		private var shotList:Array;
+		private var enemyList:Array;
 		
 		private var maxx:Number;
 		private var maxy:Number;
@@ -52,7 +53,6 @@ package vwr.game.spacegame
 			player = new Player();
 
 			camera = new Camera();
-			followPoint = new Point();
 			addChild(player);
 			addChild(camera);
 			activeEntityList.push(player);
@@ -64,29 +64,29 @@ package vwr.game.spacegame
 			camera.x = player.x;
 			camera.y = player.y;
 			
-			player.x -= 20;
-			player.y += 100
-			player.xvel = 10;
-			player.yvel = 10;
+			player.x = -50;
+			player.y = -50;
+			player.xvel = 0;
+			player.yvel = 0;
 			
-			shotArray = new Array();
+			shotList = new Array();
 			for (var i:int = 0; i < 30; ++i)
 			{
 				var newshot:Shot = new Shot();
+				if (i == 0) newshot.elasticity = 0.54321;
 				activeEntityList.push(newshot);
 				addChild(newshot);
-				shotArray.push(newshot);
+				shotList.push(newshot);
 			}
+			
+			enemyList = new Array();
 		}
 		
 		public function Update():void
 		{
 			++sequenceNumber;
 			
-			while (currentRoom.highlightStore.numChildren > 0)
-			{
-				currentRoom.highlightStore.removeChildAt(0);
-			}
+			currentRoom.ResetHighlight();
 			
 			//spawn pending entities
 			while (currentRoom.numToSpawn > 0)
@@ -94,6 +94,7 @@ package vwr.game.spacegame
 				var toAdd:Entity = currentRoom.SpawnPendingEntity();
 				addChild(toAdd);
 				activeEntityList.push(toAdd);
+				if (toAdd is Enemy) enemyList.push(toAdd);
 			}
 			
 			//update all entities
@@ -107,76 +108,34 @@ package vwr.game.spacegame
 				if (ent.noclip == false)
 				{
 					//Collider with other ents
-					for each (var othent:Entity in activeEntityList)
-					{
-						if (othent is Shot && ent is Enemy)
-						{
-							if ((othent as Shot).IsActive())
-							if (othent.x > ent.x - ent.hitwidth / 2 && othent.x < ent.x + ent.hitwidth / 2
-								&& othent.y > ent.y - ent.hitheight / 2 && othent.y < ent.y + ent.hitheight / 2)
-							{
-								(othent as Shot).DoHit();
-								ent.x = (Math.random() * 3280) - 1000;
-								ent.y = (Math.random() * 2800) - 1000;
-							}
-						}
-					}
-					
+					//==nothing here yet==
 					//Confine to room
 					ent.Confine(minx, miny, maxx, maxy);
 					ent.CollideTiles(currentRoom);
 				}
 			}
-			
-			//Shooting lasers :D
-			if (player.MouseDown())
+			//shots check if hit enemies
+			for each(var shot:Shot in shotList)
 			{
-				if (sequenceNumber % 4 == 1)
+				if (!shot.IsActive()) continue;
+				
+				var closestEnemy:Enemy = null;
+				
+				for each(var enm:Enemy in enemyList)
 				{
-					var playerRotRad:Number = -(player.rotation / 180) * Math.PI;
-					
-					var shotOffsetY:Number = -25;
-					var shotOffsetX:Number = 33;
-					
-					var realShotOffsetX:Number = Math.sin(playerRotRad) * shotOffsetY;
-					var realShotOffsetY:Number = Math.cos(playerRotRad) * shotOffsetY;
-					if (sequenceNumber % 8 == 1)
-					{
-						realShotOffsetX += Math.sin(playerRotRad + (Math.PI / 2)) * shotOffsetX;
-						realShotOffsetY += Math.cos(playerRotRad + (Math.PI / 2)) * shotOffsetX;
-					}
-					else
-					{
-						realShotOffsetX += Math.sin(playerRotRad - (Math.PI / 2)) * shotOffsetX;
-						realShotOffsetY += Math.cos(playerRotRad - (Math.PI / 2)) * shotOffsetX;
-					}
-					
-					var realShotOriginX:Number = player.x + realShotOffsetX;
-					var realShotOriginY:Number = player.y + realShotOffsetY;
-					
-					var shotOriginToCrosshairRotation:Number = ((Math.atan2(realShotOriginY - cursor.y, realShotOriginX - cursor.x) / Math.PI) * 180) - 90;
-					
-					for (var i:int = 0; i < shotArray.length; ++i)
-					{
-						if ((shotArray[i] as Shot).Shoot(realShotOriginX, realShotOriginY, shotOriginToCrosshairRotation))
-						{
-							(shotArray[i] as Shot).Update();
-							break;
-						}
-					}
+					if (shot.HitEnt(enm)) closestEnemy = enm;
+				}
+				
+				if (closestEnemy != null)
+				{
+					closestEnemy.x = 0;// (Math.random() * currentRoom.roomWidth) + currentRoom.startx;
+					closestEnemy.y = 0;// (Math.random() * currentRoom.roomHeight) + currentRoom.starty;
 				}
 			}
-			else
-			{
-				sequenceNumber = 0;
-			}
 			
+			player.HandleShooting(ShootLaser, cursor.x, cursor.y);
 			
-			followPoint.x = (cursor.x + (player.x * 2)) / 3;
-			followPoint.y = (cursor.y + (player.y * 2)) / 3;
-			camera.xvel = (followPoint.x - camera.x) / 8;
-			camera.yvel = (followPoint.y - camera.y) / 6;
-			camera.zoom = 1 - Math.min((Math.pow((player.x - cursor.x) / (stage.stageWidth / stage.stageHeight), 2) + Math.pow(player.y - cursor.y, 2)) / 1500000, 0.125);
+			camera.LearnPositions(player.x, player.y, cursor.x, cursor.y);
 			scaleX = scaleY = camera.zoom;
 			x = (Main.gameWidth / 2) - (camera.x * camera.zoom);
 			y = (Main.gameHeight / 2) - (camera.y * camera.zoom);
@@ -190,6 +149,18 @@ package vwr.game.spacegame
 			currentRoom.UpdateBG(camera);
 			currentRoom.Update();
 		}
+		
+		private function ShootLaser(xpos:Number, ypos:Number, dir:Number):void
+		{
+			for (var i:int = 0; i < shotList.length; ++i)
+			{
+				if ((shotList[i] as Shot).Shoot(xpos,ypos,dir))
+				{
+					(shotList[i] as Shot).Update();
+					(shotList[i] as Shot).CollideTiles(currentRoom);
+					break;
+				}
+			}
+		}
 	}
-
 }

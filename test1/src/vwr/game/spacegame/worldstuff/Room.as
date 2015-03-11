@@ -11,6 +11,9 @@ package vwr.game.spacegame.worldstuff
 	/**
 	 * ...
 	 * @author Victor Reynolds
+	 * 
+	 * reminder:
+	 * topleft corner of the topleft tile is 0,0
 	 */
 	public class Room extends Sprite
 	{
@@ -28,7 +31,7 @@ package vwr.game.spacegame.worldstuff
 		public var bgObjs:Array;
 		public var parralax:Number = 0.5;
 		public var bgScale:Number = 2;
-		public var highlightStore:Sprite;
+		private var highlightStore:Sprite;
 		public var numToSpawn:int = 0;
 		
 		public function Room() 
@@ -79,6 +82,13 @@ package vwr.game.spacegame.worldstuff
 			return null;
 		}
 		
+		public function ResetHighlight():void 
+		{
+			while (highlightStore.numChildren > 0)
+			{
+				highlightStore.removeChildAt(0);
+			}
+		}
 		public function Update():void
 		{
 		}
@@ -122,12 +132,11 @@ package vwr.game.spacegame.worldstuff
 		
 		public function HighlightTile(ix:int, iy:int):void
 		{
-			return;
-			
+			setChildIndex(highlightStore, this.numChildren - 1);
 			var marker:Shape = new Shape();
-			
 			var color:uint = 0x009922;
 			
+			/*
 			// for testing purposes
 			if (highlightStore.numChildren == 0)
 			{
@@ -171,6 +180,8 @@ package vwr.game.spacegame.worldstuff
 			{
 				color = 0x888888;
 			}
+			*/
+			
 			marker.graphics.beginFill(color, 0.4);
 			marker.graphics.lineStyle(1, 0xff8822, 0.7);
 			marker.graphics.drawRect(

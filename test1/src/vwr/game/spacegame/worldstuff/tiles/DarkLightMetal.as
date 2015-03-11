@@ -12,7 +12,7 @@ package vwr.game.spacegame.worldstuff.tiles
 	public class DarkLightMetal extends Tile 
 	{
 		
-		[Embed(source = "/../../sprite/mtile03.png")]
+		[Embed(source = "/../../sprite/mtile04.png")]
 		private var picture:Class;
 		
 		public function DarkLightMetal() 

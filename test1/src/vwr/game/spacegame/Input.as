@@ -113,6 +113,10 @@ package vwr.game.spacegame
 		{
 			return keyDown[68];
 		}
+		public static function mouseButton():int
+		{
+			return mouseDown;
+		}
 	}
 
 }

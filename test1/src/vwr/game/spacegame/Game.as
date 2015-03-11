@@ -12,6 +12,7 @@ package vwr.game.spacegame
 	{
 		private var world:World;
 		private var input:Input;
+		private var menu:Menu;
 		
 		public function Game() 
 		{
@@ -20,10 +21,12 @@ package vwr.game.spacegame
 			addEventListener(Event.ENTER_FRAME, Update);
 			
 			world = new World();
+			menu = new Menu();
 			
 			Mouse.hide();
 			
 			addChild(world);
+			addChild(menu);
 			addChild(input);
         }
 		
@@ -32,6 +35,7 @@ package vwr.game.spacegame
 		{
 			input.Update();
 			world.Update();
+			menu.Update();
         }
 		
 	}

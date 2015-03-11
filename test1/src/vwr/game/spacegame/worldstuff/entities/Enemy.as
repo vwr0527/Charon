@@ -20,6 +20,8 @@ package vwr.game.spacegame.worldstuff.entities
 		private var speed:Number = 0.35;
 		private var ai_strafe:Boolean = false;
 		private var ai_counter:int = 0;
+		private var active:Boolean = true;
+		private var health:Number = 10.0;
 		
 		public function Enemy() 
 		{
@@ -93,6 +95,8 @@ package vwr.game.spacegame.worldstuff.entities
 		
 		public override function Update():void
 		{
+			if (!active) return;
+			
 			++ai_counter;
 			if (ai_counter % 400 == (Math.round(Math.random() * 400) as int)) ai_strafe = !ai_strafe;
 			if (ai_counter % 300 == (Math.round(Math.random() * 300) as int)) strafeSpeedFactor = (Math.random() * 0.5) + 0.5;
@@ -108,6 +112,22 @@ package vwr.game.spacegame.worldstuff.entities
 			}
 			
 			super.Update();
+		}
+		
+		public function Explode(createExplosionFunc:Function):void
+		{
+			createExplosionFunc(x, y, Explosion.medium);
+			active = false;
+		}
+		
+		public function Die():void
+		{
+			active = false;
+		}
+		
+		public function Respawn():void
+		{
+			active = true;
 		}
 	}
 

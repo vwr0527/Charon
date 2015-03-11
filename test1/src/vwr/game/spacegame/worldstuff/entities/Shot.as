@@ -2,6 +2,7 @@ package vwr.game.spacegame.worldstuff.entities
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import vwr.game.spacegame.worldstuff.Entity;
@@ -22,9 +23,14 @@ package vwr.game.spacegame.worldstuff.entities
 		[Embed(source = "/../../sprite/hit01.png")]
 		private var hitpic:Class;
 		
-		private var speed:Number = 28;
+		private var speed:Number = 30;
 		private var impact:int = 5; // 0 = traveling, 1 or more is frames after hit
 		private var counter:int = 0;
+		private var laserSize:Number = 0.65;
+		private var laserLengthFactor:Number = 0.035;
+		private var impactSize:Number = 0.75;
+		private var slope:Number = 0;
+		private var intercept:Number = 0;
 		
 		public function Shot() 
 		{
@@ -34,12 +40,10 @@ package vwr.game.spacegame.worldstuff.entities
 			pic.bitmapData.threshold(pic.bitmapData, pic.bitmapData.rect, new Point(0, 0), "==", 0xffff00ff);
 			pic.bitmapData.colorTransform(pic.bitmapData.rect, new ColorTransform(1, 2, 2, 1, 50, -255, -255, 0));
 			
-			var scaleFac:Number = 0.75;
-			
-			pic.scaleX = scaleFac;
-			pic.scaleY = scaleFac;
-			pic.x = -(pic.bitmapData.width / 2) * scaleFac;
-			pic.y = -(pic.bitmapData.height / 4) * scaleFac;
+			pic.scaleX = laserSize;
+			pic.scaleY = laserSize * speed * laserLengthFactor;
+			pic.x = -(pic.bitmapData.width / 2) * laserSize;
+			pic.y = -((pic.bitmapData.height * speed * laserLengthFactor) / 4) * laserSize;
 			
 			pic.alpha = 1.0;
 			addChildAt(pic, 0);
@@ -48,14 +52,12 @@ package vwr.game.spacegame.worldstuff.entities
 			var pic2:Bitmap = new hitpic();
 			pic2.smoothing = true;
 			pic2.bitmapData.threshold(pic2.bitmapData, pic2.bitmapData.rect, new Point(0, 0), "==", 0xffff00ff);
-			pic2.bitmapData.colorTransform(pic2.bitmapData.rect, new ColorTransform(1.2,1.2,1.2, 1, 0, -50, -50, 0));
+			pic2.bitmapData.colorTransform(pic2.bitmapData.rect, new ColorTransform(1.2, 1.2, 1.2, 1, 0, -50, -50, 0));
 			
-			var scaleFac2:Number = 1;
-			
-			pic2.scaleX = scaleFac2;
-			pic2.scaleY = scaleFac2;
-			pic2.x = -(pic2.bitmapData.width / 2) * scaleFac2;
-			pic2.y = -(pic2.bitmapData.height / 2) * scaleFac2;
+			pic2.scaleX = impactSize;
+			pic2.scaleY = impactSize;
+			pic2.x = -(pic2.bitmapData.width / 2) * impactSize;
+			pic2.y = -(pic2.bitmapData.height / 2) * impactSize;
 			
 			pic2.alpha = 1.0;
 			addChildAt(pic2, 1);
@@ -67,6 +69,8 @@ package vwr.game.spacegame.worldstuff.entities
 			
 			friction = 1;
 			elasticity = 0.0;
+			
+			//enableHighlightTiles = true;
         }
 		
 		public override function Confine(minx:Number, miny:Number, maxx:Number, maxy:Number):void
@@ -88,93 +92,296 @@ package vwr.game.spacegame.worldstuff.entities
 				DoHit();
 			}
 		}
+		
 		public override function CollideTiles(currentRoom:Room):void
 		{
-			//if outside of tileGrid's bounds, do nothing
-			if (this.y + this.hitheight / 2 < 0
-			|| this.x + this.hitwidth / 2 < 0
-			|| this.y - this.hitheight / 2 > (currentRoom.numRows * currentRoom.tileHeight)
-			|| this.x - this.hitwidth / 2 > (currentRoom.numCols * currentRoom.tileWidth))
-			{
-				return;
-			}
+			//if currently not a real laser projectile, do nothing
+			if (impact != 0) return;
 			
 			//if no tiles, do nothing
 			if (currentRoom.tileGrid.length == 0) return;
+			/*
+			//if outside of tileGrid's bounds, do nothing
+			//TODO: Take into account corner cutting
+			if ((this.y < 0
+			|| this.x < 0
+			|| this.y > (currentRoom.numRows * currentRoom.tileHeight)
+			|| this.x > (currentRoom.numCols * currentRoom.tileWidth))
+			&&
+			(this.py < 0
+			|| this.px < 0
+			|| this.py > (currentRoom.numRows * currentRoom.tileHeight)
+			|| this.px > (currentRoom.numCols * currentRoom.tileWidth)))
+			{
+				return;
+			}*/
 			
-			//point collision
-			var closest_index_x:int = currentRoom.getIndexAtPosX(this.x);
-			var closest_index_y:int = currentRoom.getIndexAtPosY(this.y);
-			HitTile(currentRoom.tileGrid[closest_index_y][closest_index_x]);
+			//line collision
+			var sxi:int = 0; //start x index
+			var syi:int = 0;
+			var exi:int = 0; //end x index
+			var eyi:int = 0;
+			
+			sxi = Math.floor(px / currentRoom.tileWidth) as int;
+			syi = Math.floor(py / currentRoom.tileHeight) as int;
+			
+			exi = Math.floor(x / currentRoom.tileWidth) as int;
+			eyi = Math.floor(y / currentRoom.tileHeight) as int;
+			
+			if (sxi < currentRoom.numCols && syi < currentRoom.numRows && sxi >= 0 && syi >= 0)
+			{
+				if (enableHighlightTiles) currentRoom.HighlightTile(sxi, syi);
+				HitTile(currentRoom.tileGrid[syi][sxi]);
+			}
+			
+			var next_y_intercept:Number = 0
+			if (sxi > exi)
+			{
+				next_y_intercept = ((currentRoom.tileWidth * sxi) * slope) + intercept;
+			}
+			else if (sxi < exi)
+			{
+				next_y_intercept = ((currentRoom.tileWidth * (sxi + 1)) * slope) + intercept;
+			}
+			
+			var tyi:int = 0; //target y index - the y index of the y position of the next intercept
+			tyi = Math.floor(next_y_intercept / currentRoom.tileHeight) as int;
+			if ((syi == eyi) || !((syi <= tyi && tyi <= eyi) || (eyi <= tyi && tyi <= syi)))
+			{
+				tyi = eyi;
+			}
+			
+			var emergencyBrakes:int = 0; //prevent infinite loop. probably will never need.
+			
+			//for cxi,cyi (current tile x,y index) not equal to exi,eyi (end tile x,y index)
+			for (var cxi:int = sxi, cyi:int = syi; !(cxi == exi && cyi == eyi); )
+			{
+				//find out why it's looping too long
+				if (emergencyBrakes > 100)
+				{
+					trace("emergency brakes applied");
+					break;
+				}
+				emergencyBrakes ++;
+				
+				//the case where the end index is directly above or below you
+				//or the there's a new target y index
+				if (cxi == exi || cyi != tyi)
+				{
+					if (cyi < eyi)
+					{
+						cyi ++;
+					}
+					else
+					{
+						cyi --;
+					}
+				}
+				else
+				{
+					if (cxi > exi)
+					{
+						cxi --;
+						next_y_intercept = ((currentRoom.tileWidth * cxi) * slope) + intercept;
+					}
+					else
+					{
+						cxi ++;
+						next_y_intercept = ((currentRoom.tileWidth * (cxi + 1)) * slope) + intercept;
+					}
+					tyi = Math.floor(next_y_intercept / currentRoom.tileHeight) as int;
+					if ((cyi == eyi) || !((cyi <= tyi && tyi <= eyi) || (eyi <= tyi && tyi <= cyi)))
+					{
+						tyi = eyi;
+					}
+				}
+				
+				if (cxi >= currentRoom.numCols || cyi >= currentRoom.numRows || cxi < 0 || cyi < 0)
+				{
+					continue; //add thing that checks if the ship has sailed, if so, break;
+				}
+				else
+				{
+					if (enableHighlightTiles) currentRoom.HighlightTile(cxi, cyi);
+					HitTile(currentRoom.tileGrid[cyi][cxi]);
+				}
+			}
 		}
 		
 		protected override function HitTile(tile:Tile):void
 		{
-			if (impact != 0) return;
-			if (tile == null) return;
-			if (tile.noclip) return;
+			if (tile == null || tile.noclip)
+			{
+				return;
+			}
 			/*if (tile is DiagTile)
 			{
 				HitDiagTile(tile as DiagTile);
 				return;
 			}*/
 			
-			var dx:Number = x - px;
-			var dy:Number = y - py;
-			var tx:Number = 0;  //time x hit = 0 is beginning time, 1 is end time
-			var ty:Number = 0;  //time y hit
-			
-			var pass_x:Boolean = px >= tile.x + tile.width || px <= tile.x;
-			var pass_y:Boolean = py >= tile.y + tile.height || py <= tile.y;
-			
-			if (pass_x)
+			HitSquare(tile.x, tile.y, tile.x + tile.width, tile.y + tile.height);
+		}
+		
+		//returns true or false. let world handle it.
+		public function HitEnt(ent:Entity):Boolean
+		{
+			if (ent == null || ent.noclip == true || impact > 1 || this.noclip == true)
 			{
-				if (dx > 0)
+				return false;
+			}
+			
+			var minx:Number = ent.x - (ent.hitwidth / 2);
+			var miny:Number = ent.y - (ent.hitheight / 2);
+			var maxx:Number = ent.x + (ent.hitwidth / 2);
+			var maxy:Number = ent.y + (ent.hitheight / 2);
+			
+			if (DidIntersectSquare(minx, miny, maxx, maxy))
+			{
+				HitSquare(minx, miny, maxx, maxy);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		//this only checks if x -> px intersects a specified square. It doesn't change anything.
+		protected function DidIntersectSquare(minx:Number, miny:Number, maxx:Number, maxy:Number):Boolean 
+		{
+			var lineIntersectRect:Boolean = false;
+			
+			var x_inside:Boolean = x > minx && x < maxx;
+			var y_inside:Boolean = y > miny && y < maxy;
+			
+			if (x_inside && y_inside) lineIntersectRect = true;
+			
+			var px_inside:Boolean = px > minx && px < maxx;
+			var py_inside:Boolean = py > miny && py < maxy;
+			
+			if (px_inside && py_inside) lineIntersectRect = true;
+			
+			if (lineIntersectRect == false)
+			{
+				if (slope == Number.MAX_VALUE)
 				{
-					tx = Math.abs((px - tile.x) / dx);
+					if (intercept >= minx && intercept <= maxx)
+					{
+						if (y_inside || py_inside ||
+							(y > maxy && py < miny) ||
+							(py > maxy && y < miny))
+						{
+							lineIntersectRect = true;
+						}
+					}
 				}
 				else
 				{
-					tx = Math.abs((px - (tile.x + tile.width)) / dx);
+					if ((x_inside || px_inside ||
+						(px < minx && x > maxx) ||
+						(x < minx && px > maxx))
+						&&
+						(y_inside || py_inside ||
+						(py < miny && y > maxy) ||
+						(y < miny && py > maxy)))
+					{
+						var y1:Number = minx * slope + intercept;
+						var y2:Number = maxx * slope + intercept;
+						
+						if ((y1 > miny && y1 < maxy) ||
+							(y2 > miny && y2 < maxy) ||
+							(y1 < miny && y2 > maxy) ||
+							(y2 < miny && y1 > maxy))
+						{
+							lineIntersectRect = true;
+						}
+					}
 				}
 			}
 			
-			if (pass_y)
+			return lineIntersectRect;
+		}
+		
+		//it will only get here if collidetiles determines that it was within the tile
+		//therefore, it doesn't check if it is actually intersecting the square.
+		protected function HitSquare(xmin:Number, ymin:Number, xmax:Number, ymax:Number):void
+		{
+			//y-intercept = newx newy, and x-intercept = newx2 newy2
+			var new_x:Number = 0;
+			var new_y:Number = 0;
+			var new_x2:Number = 0;
+			var new_y2:Number = 0;
+			if (x > px)
 			{
-				if (dy > 0)
+				new_y = (slope * xmin) + intercept;
+				new_x = xmin;
+			}
+			else
+			{
+				new_y = (slope * xmax) + intercept;
+				new_x = xmax;
+			}
+			
+			if (slope != 0)
+			{
+				if (y > py)
 				{
-					ty = Math.abs((py - tile.y) / dy);
+					new_x2 = (ymin - intercept) / slope;
+					new_y2 = ymin;
 				}
 				else
 				{
-					ty = Math.abs((py - (tile.y + tile.height)) / dy);
+					new_x2 = (ymax - intercept) / slope;
+					new_y2 = ymax;
 				}
 			}
-			
-			if (pass_x && pass_y)
+			else
 			{
-				//get the y when x intercepts tile.x
-				var temp_y:Number = py + (dy * ty);
-				if (temp_y > tile.y + tile.height || temp_y < tile.y)
+				new_x2 = x;
+				if (y > py)
 				{
-					//let the next part handle it
-					pass_y = false;
+					new_y2 = ymin;
 				}
 				else
 				{
-					pass_x = false;
+					new_y2 = ymax;
 				}
 			}
 			
-			if (pass_x)
+			var cur_delta:Number = Math.abs(x - px) + Math.abs(y - py);
+			var new_delta:Number = Number.MAX_VALUE;  //if the next part fails, then these are essentially discounted.
+			var new2_delta:Number = Number.MAX_VALUE;
+			
+			//verify that it is actually on the tile wall
+			if (new_y > ymin && new_y < ymax)
 			{
-				x = px + (dx * tx);
-				y = py + (dy * tx);
+				new_delta = Math.abs(new_x - px) + Math.abs(new_y - py);
 			}
-			else if (pass_y)
+			if (new_x2 > xmin && new_x2 < xmax)
 			{
-				x = px + (dx * ty);
-				y = py + (dy * ty);
+				new2_delta = Math.abs(new_x2 - px) + Math.abs(new_y2 - py);
+			}
+			
+			//see which is smallest
+			//x, y should = smallest distance
+			if (new_delta < cur_delta)
+			{
+				if (new2_delta < cur_delta)
+				{
+					x = new_x2;
+					y = new_y2;
+				}
+				else
+				{
+					x = new_x;
+					y = new_y;
+				}
+			}
+			else if (new2_delta < cur_delta)
+			{
+				x = new_x2;
+				y = new_y2;
 			}
 			
 			DoHit();
@@ -207,11 +414,31 @@ package vwr.game.spacegame.worldstuff.entities
 					rotation = Math.random() * 360;
 					return;
 				}
-				if (counter == 2)
+				if (counter > 1)
 				{
-					rotation = rotfric;
-					x += xvel / 3;
-					y += yvel / 3;
+					if (counter == 2)
+					{
+						rotation = rotfric;
+						//x -= xvel / 4;
+						//y -= yvel / 4;
+					}
+					var pic:Bitmap = getChildAt(0) as Bitmap;
+					
+					pic.alpha = 1;
+					getChildAt(1).alpha = 0;
+					scaleX = scaleY = 1.0;
+					
+					if (friction != 1)
+					{
+						var realSpeed:Number = Math.sqrt(Math.pow(xvel, 2) + Math.pow(yvel, 2));
+						
+						pic.scaleX = laserSize;
+						pic.scaleY = laserSize * realSpeed * laserLengthFactor;
+						pic.x = -(pic.bitmapData.width / 2) * laserSize;
+						pic.y = -((pic.bitmapData.height * realSpeed * laserLengthFactor) / 4) * laserSize;
+						
+						if (realSpeed < 0.1) impact = 5;
+					}
 				}
 			}
 			if (impact > 0 && impact <= 4)
@@ -227,12 +454,6 @@ package vwr.game.spacegame.worldstuff.entities
 				getChildAt(0).alpha = 0;
 				getChildAt(1).alpha = 0;
 			}
-			if (impact == 0)
-			{
-				getChildAt(0).alpha = 1;
-				getChildAt(1).alpha = 0;
-				scaleX = scaleY = 1.0;
-			}
 			super.Update();
 			if (counter > 100 && impact == 0) DoHit();
 		}
@@ -245,9 +466,21 @@ package vwr.game.spacegame.worldstuff.entities
 			{
 				x = xpos;
 				y = ypos;
+				px = xpos;
+				py = ypos;
 				var raddir:Number = (dir / 180) * Math.PI;
 				xvel = -Math.sin(-raddir) * speed;
 				yvel = -Math.cos(raddir) * speed;
+				if (xvel != 0)
+				{
+					slope = yvel / xvel;
+					intercept = y - (slope * x);
+				}
+				else
+				{
+					slope = Number.MAX_VALUE;
+					intercept = xpos;
+				}
 				rotation = dir;
 				impact = 0;
 				counter = 0;
@@ -264,5 +497,4 @@ package vwr.game.spacegame.worldstuff.entities
 			return impact == 0;
 		}
 	}
-
 }
