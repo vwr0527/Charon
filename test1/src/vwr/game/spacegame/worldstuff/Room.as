@@ -4,7 +4,7 @@ package vwr.game.spacegame.worldstuff
 	import flash.display.Sprite;
 	import flash.display.Bitmap;
 	import vwr.game.spacegame.worldstuff.Tile;
-	import vwr.game.spacegame.worldstuff.tiles.Metal;
+	import vwr.game.spacegame.worldstuff.tiles.*;
 	import vwr.game.spacegame.Main;
 	/**
 	 * ...
@@ -45,9 +45,9 @@ package vwr.game.spacegame.worldstuff
 				for (var j:int = 0; j < numCols; ++j)
 				{
 					var tile:Tile = null;
-					if (layout[i][j] == 1)
+					if (layout[i][j] != 0)
 					{
-						tile = new Metal();
+						tile = makeNewTile(layout[i][j]);
 						tile.x = j * tileWidth;
 						tile.y = i * tileHeight;
 						addChild(tile);
@@ -56,6 +56,18 @@ package vwr.game.spacegame.worldstuff
 				}
 				tileGrid.push(row);
 			}
+		}
+		
+		private function makeNewTile(id:int):Tile 
+		{
+			if (id == 0) return null;
+			else if (id == 1) return new Metal();
+			else if (id == 2) return new Plating();
+			else if (id == 3) { var newtile:Tile = new Plating(); newtile.noclip = true; return newtile; }
+			else if (id == 4) { newtile = new DarkLightMetal(); newtile.noclip = true; return newtile; }
+			else if (id == 5) { new LightMetal(); }
+			
+			return null;
 		}
 		
 		public function HighlightTile(ix:int, iy:int):void

@@ -9,22 +9,23 @@ package vwr.game.spacegame.worldstuff.tiles
 	 * ...
 	 * @author Victor Reynolds
 	 */
-	public class SmallMetalLight extends Tile 
+	public class DarkLightMetal extends Tile 
 	{
 		
-		
-		[Embed(source = "/../../sprite/mtile02.png")]
+		[Embed(source = "/../../sprite/mtile03.png")]
 		private var picture:Class;
 		
-		public function SmallMetalLight() 
+		public function DarkLightMetal() 
 		{
+			super();
+			
 			var pic:Bitmap = new picture();
 			//pic.smoothing = true;
 			pic.bitmapData.threshold(pic.bitmapData, pic.bitmapData.rect, new Point(0, 0), "==", 0xffff00ff);
 			//pic.x = -pic.bitmapData.width / 2;
 			//pic.y = -pic.bitmapData.height / 2;
-			pic.width /= 2;
-			pic.height /= 2;
+			//pic.width /= 2;
+			//pic.height /= 2;
 			addChild(pic);
 		}
 		

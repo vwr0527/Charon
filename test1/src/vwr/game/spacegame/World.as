@@ -1,6 +1,7 @@
 package vwr.game.spacegame 
 {
 	import flash.display.Sprite;
+	import flash.geom.Point;
 	import vwr.game.spacegame.worldstuff.entities.*;
 	import vwr.game.spacegame.worldstuff.Entity;
 	import vwr.game.spacegame.worldstuff.Room;
@@ -17,6 +18,7 @@ package vwr.game.spacegame
 		private var player:Player;
 		private var camera:Camera;
 		private var cursor:Cursor;
+		private var followPoint:Point;
 		private var currentRoom:Room;
 		private var roomList:Array;
 		private var activeEntityList:Array;
@@ -47,6 +49,7 @@ package vwr.game.spacegame
 			activeEntityList = new Array();
 			player = new Player();
 			camera = new Camera();
+			followPoint = new Point();
 			addChild(player);
 			addChild(camera);
 			activeEntityList.push(player);
@@ -78,8 +81,10 @@ package vwr.game.spacegame
 				}
 			}
 			
-			camera.xvel = (player.x - camera.x) / 10;
-			camera.yvel = (player.y - camera.y) / 10;
+			followPoint.x = (cursor.x + (player.x * 2)) / 3;
+			followPoint.y = (cursor.y + (player.y * 2)) / 3;
+			camera.xvel = (followPoint.x - camera.x) / 8;
+			camera.yvel = (followPoint.y - camera.y) / 6;
 			x = Main.gameWidth / 2 - camera.x;
 			y = Main.gameHeight / 2 - camera.y;
 			

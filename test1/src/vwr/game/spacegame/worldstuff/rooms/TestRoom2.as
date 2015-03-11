@@ -62,7 +62,7 @@ package vwr.game.spacegame.worldstuff.rooms
 					var tile:Tile = null;
 					if (layout[i][j] == 1)
 					{
-						tile = new SmallMetalLight();
+						tile = new LightMetal();
 						tile.width *= 1.5;
 						tile.height *= 1.5;
 						tile.x = j * tileWidth;

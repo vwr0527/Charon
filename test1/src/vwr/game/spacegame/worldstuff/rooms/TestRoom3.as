@@ -1,8 +1,11 @@
 package vwr.game.spacegame.worldstuff.rooms 
 {
+	import vwr.game.spacegame.worldstuff.BgPlane;
 	import vwr.game.spacegame.worldstuff.Room;
 	import vwr.game.spacegame.worldstuff.Tile;
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Sprite;
 	import flash.geom.Point;
 	import vwr.game.spacegame.worldstuff.tiles.*;
 	import vwr.game.spacegame.worldstuff.BgObject;
@@ -13,7 +16,7 @@ package vwr.game.spacegame.worldstuff.rooms
 	 */
 	public class TestRoom3 extends Room 
 	{
-		[Embed(source = "/../../sprite/starfield-1.jpg")]
+		[Embed(source = "/../../sprite/starfield-1.jpg")]  //get permission for this.
 		private var picture:Class;
 		
 		[Embed(source = "/../../sprite/spacerock-1.png")]
@@ -22,26 +25,32 @@ package vwr.game.spacegame.worldstuff.rooms
 		[Embed(source = "/../../sprite/planet-1.png")]
 		private var planetpic:Class;
 		
+		[Embed(source = "/../../sprite/tech01.jpg")] //get permission for this. http://www.spiralforums.biz/index.php?showtopic=11022
+		private var wall:Class;
+		
+		[Embed(source = "/../../sprite/bg_blur_dark.png")]
+		private var back:Class;
+		
 		private var layout:Array = [
-		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-		[0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-		[0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1],
-		[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-		[0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+		[0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 4, 3, 3, 3, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1],
+		[0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 4, 0, 0, 3, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 4, 1],
+		[0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 4, 1, 4, 0, 0, 3, 1, 3, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 3, 4, 1],
+		[0, 0, 4, 0, 0, 0, 0, 0, 1, 1, 4, 1, 4, 0, 0, 3, 1, 3, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 3, 4, 1],
+		[0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 3, 4, 1],
+		[0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3, 3, 3, 4, 1],
+		[0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 4, 1],
+		[1, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1],
+		[4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1, 4, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1],
+		[4, 3, 3, 3, 4, 4, 3, 3, 3, 3, 4, 1, 4, 0, 0, 0, 0, 3, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1],
+		[4, 3, 3, 3, 4, 4, 0, 0, 0, 0, 4, 1, 4, 0, 0, 0, 0, 3, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1],
+		[4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 4, 1, 4, 0, 0, 0, 0, 0, 3, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1],
+		[1, 1, 1, 1, 1, 4, 0, 0, 0, 0, 4, 1, 4, 0, 0, 0, 0, 0, 0, 3, 1, 1, 3, 0, 0, 0, 0, 0, 0, 0, 4, 1],
+		[1, 0, 0, 0, 1, 4, 0, 0, 0, 0, 4, 1, 4, 0, 0, 0, 0, 0, 0, 0, 3, 1, 1, 3, 0, 0, 0, 0, 0, 0, 4, 1],
+		[0, 0, 0, 0, 1, 4, 0, 0, 0, 0, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 1, 3, 0, 0, 0, 0, 0, 4, 1],
+		[0, 0, 0, 0, 1, 4, 3, 3, 3, 3, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 4, 1],
+		[0, 0, 0, 0, 1, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1],
 		[0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 		];
 		
@@ -69,24 +78,75 @@ package vwr.game.spacegame.worldstuff.rooms
 			rock.smoothing = true;
 			rock.bitmapData.threshold(rock.bitmapData, rock.bitmapData.rect, new Point(0, 0), "==", 0xffff00ff);
 			var bgRockObj:BgObject = new BgObject(rock);
-			bgRockObj.bgScale = 1;
 			bgRockObj.parralax = 0.5;
 			addChild(bgRockObj);
-			bgRockObj.xoffset = -80;
-			bgRockObj.yoffset = -50;
+			bgRockObj.offset.x = -80;
+			bgRockObj.offset.y = -50;
 			bgObjs.push(bgRockObj);
 			
 			var pp:Bitmap = new planetpic();
 			pp.smoothing = true;
 			var bgPlanetObj:BgObject = new BgObject(pp);
-			bgPlanetObj.bgScale = 2;
+			bgPlanetObj.scaleX = 2;
+			bgPlanetObj.scaleY = 2;
 			bgPlanetObj.parralax = 0.99;
 			addChildAt(bgPlanetObj, 1);
-			bgPlanetObj.xoffset = 380;
-			bgPlanetObj.yoffset = 50;
+			bgPlanetObj.offset.x = 45000;
+			bgPlanetObj.offset.y = 5000;
 			bgObjs.push(bgPlanetObj);
 			
+			var wp:Bitmap = new wall();
+			wp.smoothing = true;
+			wp = BgPlane.AlterBitmap(wp, 512, 512, false, null, 0.5, 1,0,0);
+			var wallBg:BgPlane = new BgPlane(wp);
+			addChildAt(wallBg, 2);
+			wallBg.offset.x = -3000;
+			wallBg.offset.y = 600;
+			wallBg.parralax = 0.8;
+			wallBg.offset2.x = 4280;
+			wallBg.offset2.y = 600;
+			wallBg.parralax2 = 0.8;
+			wallBg.offset3.x = -3000;
+			wallBg.offset3.y = 2000;
+			wallBg.parralax3 = 0.3;
+			wallBg.offset4.x = 4280;
+			wallBg.offset4.y = 2000;
+			wallBg.parralax4 = 0.3;
+			bgObjs.push(wallBg);
+			
+			var strip:Bitmap = new wall();
+			strip.smoothing = true;
+			strip = BgPlane.AlterBitmap(strip, 512, 256, false, null, 0.5, 1,0,0);
+			var stBg:BgPlane = new BgPlane(strip);
+			addChildAt(stBg, 2);
+			stBg.offset.x = -3000;
+			stBg.offset.y = 400;
+			stBg.parralax = 0.9;
+			stBg.offset2.x = 4280;
+			stBg.offset2.y = 400;
+			stBg.parralax2 = 0.9;
+			stBg.offset3.x = -3000;
+			stBg.offset3.y = 600;
+			stBg.parralax3 = 0.8;
+			stBg.offset4.x = 4280;
+			stBg.offset4.y = 600;
+			stBg.parralax4 = 0.8;
+			bgObjs.push(stBg);
+			
+			var bb:Bitmap = new back();
+			bb = BgPlane.AlterBitmap(bb, 64, 64, false, null, 1.5, 1, -.25);
+			bb.smoothing = true;
+			var backDrop:BgObject = new BgObject(bb);
+			addChild(backDrop);
+			backDrop.pic.width = 760;
+			backDrop.pic.height = 720;
+			backDrop.offset.x = 540;
+			backDrop.offset.y = 200;
+			bgObjs.push(backDrop);
+			backDrop.parralax = 0.05;
+			
 			ConstructRoom(layout);
+			
 		}
 		
 		public override function Update():void
