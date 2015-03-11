@@ -18,6 +18,7 @@ package vwr.game.spacegame.worldstuff.entities
 		private var picture:Class;
 		private var speed:Number = 0.5;
 		
+		
 		public function Player() 
 		{
 			super();

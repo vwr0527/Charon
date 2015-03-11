@@ -6,6 +6,7 @@ package vwr.game.spacegame.worldstuff
 	import vwr.game.spacegame.worldstuff.Tile;
 	import vwr.game.spacegame.worldstuff.tiles.*;
 	import vwr.game.spacegame.Main;
+	import vwr.game.spacegame.worldstuff.tiles.diagonal.ChromeDiag;
 	/**
 	 * ...
 	 * @author Victor Reynolds
@@ -50,6 +51,8 @@ package vwr.game.spacegame.worldstuff
 						tile = makeNewTile(layout[i][j]);
 						tile.x = j * tileWidth;
 						tile.y = i * tileHeight;
+						tile.width = tileWidth;
+						tile.height = tileHeight;
 						addChild(tile);
 					}
 					row.push(tile);
@@ -65,7 +68,11 @@ package vwr.game.spacegame.worldstuff
 			else if (id == 2) return new Plating();
 			else if (id == 3) { var newtile:Tile = new Plating(); newtile.noclip = true; return newtile; }
 			else if (id == 4) { newtile = new DarkLightMetal(); newtile.noclip = true; return newtile; }
-			else if (id == 5) { new LightMetal(); }
+			else if (id == 5) { return new LightMetal(); }
+			else if (id == 6) { return new ChromeDiag(0); }
+			else if (id == 7) { return new ChromeDiag(1); }
+			else if (id == 8) { return new ChromeDiag(2); }
+			else if (id == 9) { return new ChromeDiag(3); }
 			
 			return null;
 		}
@@ -74,19 +81,17 @@ package vwr.game.spacegame.worldstuff
 		{
 			return;
 			
-			
 			var marker:Shape = new Shape();
 			
 			var color:uint = 0x009922;
 			
-			/* for testing purposes
+			// for testing purposes
 			if (highlightStore.numChildren == 0)
 			{
 				color = 0x000000;
 			}
 			else if (highlightStore.numChildren == 1)
 			{
-				
 				color = 0xffffff;
 			}
 			else if (highlightStore.numChildren == 2)
@@ -123,7 +128,6 @@ package vwr.game.spacegame.worldstuff
 			{
 				color = 0x888888;
 			}
-			*/
 			marker.graphics.beginFill(color, 0.4);
 			marker.graphics.lineStyle(1, 0xff8822, 0.7);
 			marker.graphics.drawRect(
@@ -137,12 +141,13 @@ package vwr.game.spacegame.worldstuff
 		
 		public function Update():void
 		{
-			this.bg.x = -parent.x * parralax;
-			this.bg.y = -parent.y * parralax;
-			this.bg.scaleX = bgScale;
-			this.bg.scaleY = bgScale;
-			this.bg.x -= this.bg.width / 2 - Main.gameWidth / 2;
-			this.bg.y -= this.bg.height / 2 - Main.gameHeight / 2;
+			this.bg.x = ((Main.gameWidth / 2) - parent.x) * parralax;
+			this.bg.y = ((Main.gameHeight / 2) - parent.y) * parralax;
+			this.bg.scaleX = this.bg.scaleY = bgScale;
+			this.bg.x -= this.bg.width / 2;
+			this.bg.y -= this.bg.height / 2;
+			this.bg.x += (startx + (roomWidth / 2)) * (1 - parralax);
+			this.bg.y += (starty + (roomHeight / 2)) * (1 - parralax);
 			
 			for each (var bgObj:BgObject in bgObjs)
 			{

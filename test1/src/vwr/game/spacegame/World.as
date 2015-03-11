@@ -35,7 +35,7 @@ package vwr.game.spacegame
 			sequenceNumber = 0;
 			
 			roomList = new Array();
-			currentRoom = new TestRoom3();
+			currentRoom = new TestRoom4();
 			cursor = new Cursor();
 			roomList.push(currentRoom);
 			addChild(currentRoom);
@@ -48,16 +48,23 @@ package vwr.game.spacegame
 			
 			activeEntityList = new Array();
 			player = new Player();
+
 			camera = new Camera();
 			followPoint = new Point();
 			addChild(player);
 			addChild(camera);
 			activeEntityList.push(player);
 			activeEntityList.push(camera);
-			player.x = currentRoom.startx + (currentRoom.roomWidth) / 2;
-			player.y = currentRoom.starty + (currentRoom.roomHeight) / 2;
+			player.x = 320;//currentRoom.startx + (currentRoom.roomWidth) / 2;
+			player.y = 200;// currentRoom.starty + (currentRoom.roomHeight) / 2;
+			//player.showhitbox = true;
 			camera.x = player.x;
 			camera.y = player.y;
+			
+			player.x -= 20;
+			player.y += 100
+			player.xvel = 10;
+			player.yvel = 10;
 		}
 		
 		public function Update():void

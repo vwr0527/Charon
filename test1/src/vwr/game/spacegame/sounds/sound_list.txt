@@ -1,0 +1,49 @@
+Hi FrischerHering!
+
+As you know, I want to make a spaceship game. This game needs a bunch of sounds. I haven't given much thought to the sound design, but I have always heard it in my head sounding a lot like the sound effects from "Descent" and "Super Metroid".
+
+Here's a partial list of FX wanted:
+
+Explosions:
+Big explosion
+Medium explosion
+small explosion
+
+Weapons:
+Chaingun reloading
+Chaingun spinning
+Gunfire
+Shell casing clinking
+Plasma gun fire
+Laser gun fire
+Missile launching
+
+Enemies:
+Alarm sounds
+Angry insect sounds
+Robot chatter
+
+Ship:
+Shield hit
+Shield lost
+Shield regenerated
+Metallic hit
+Powerup acquired
+Thrust noise
+Afterburner thrust noise
+Afterburner powering down
+
+Environment:
+Door opening
+Door needs key - denied chirp
+Door needs key - key used chirp
+Wet organic bursting sounds
+Electric humming
+Electric arcing and sparking
+
+
+As for the music, I'm thinking something like "Super Metroid". Though don't take that too literally. Take liberties.
+
+This is a large request I know. But you can publish this on your website and let anyone else use them. I will appreciate any amount that you make! If you make some, I may not end up using every sound you create, but considering I'm not that picky about sound, and I have no intention of creating them myself, I probably will use them!
+
+Obviously I will credit you, and link to your website in the "credits" section of the game. Thanks!
