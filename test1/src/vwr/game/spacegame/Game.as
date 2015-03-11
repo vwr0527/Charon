@@ -1,10 +1,8 @@
 package vwr.game.spacegame 
 {
-	import flash.display.ShaderInput;
 	import flash.display.Sprite;
 	import flash.display.Stage;
-	import flash.events.TimerEvent;
-	import flash.utils.Timer;
+	import flash.events.Event;
 	/**
 	 * ...
 	 * @author Victor Reynolds
@@ -18,9 +16,7 @@ package vwr.game.spacegame
 		{
 			input = new Input();
 			
-			var myTimer:Timer = new Timer(1000 / Settings.UPDATE_FREQUENCY);
-            myTimer.addEventListener(TimerEvent.TIMER, timerHandler);
-            myTimer.start();
+			addEventListener(Event.ENTER_FRAME, Update);
 			
 			world = new World();
 			
@@ -29,7 +25,7 @@ package vwr.game.spacegame
         }
 		
 
-        public function timerHandler(event:TimerEvent):void
+        public function Update(event:Event):void
 		{
 			input.Update();
 			world.Update();

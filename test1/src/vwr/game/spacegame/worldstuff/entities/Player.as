@@ -28,11 +28,13 @@ package vwr.game.spacegame.worldstuff.entities
 			pic.scaleX = 0.5;
 			pic.scaleY = 0.5;
 			addChild(pic);
+			
+			friction = 0.95;
         }
 		
 		public override function Update():void
 		{
-			var speed:Number = 3;
+			var speed:Number = 1;
 			var diag:Number = speed * 0.707;
 			var skip:Boolean = false;
 			if (!(Input.moveDown() == 1 && Input.moveUp() == 1))

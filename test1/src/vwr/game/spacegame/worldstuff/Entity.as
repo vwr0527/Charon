@@ -11,7 +11,8 @@ package vwr.game.spacegame.worldstuff
 		public var xvel:Number = 0.0;
 		public var yvel:Number = 0.0;
 		public var rotvel:Number = 0.0;
-		public var friction:Number = 0.9;
+		public var friction:Number = 0.99;
+		public var rotfric:Number = 0.99;
 		
 		public function Entity() 
 		{
@@ -25,7 +26,7 @@ package vwr.game.spacegame.worldstuff
 			rotation += rotvel;
 			xvel *= friction;
 			yvel *= friction;
-			rotvel *= friction;
+			rotvel *= rotfric;
 			
 			if (Math.abs(xvel) < 0.1) xvel = 0;
 			if (Math.abs(yvel) < 0.1) yvel = 0;

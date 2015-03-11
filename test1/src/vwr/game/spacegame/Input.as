@@ -29,7 +29,7 @@ package vwr.game.spacegame
 			
 			cover = new Shape();
             cover.graphics.beginFill(0x00000000);
-            cover.graphics.drawRect(-10000, -10000, 20000, 20000);
+            cover.graphics.drawRect(-4000, -4000, 8000, 8000);
             cover.graphics.endFill();
 			cover.alpha = 0;
             addChild(cover);
