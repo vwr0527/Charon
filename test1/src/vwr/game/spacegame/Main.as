@@ -4,7 +4,6 @@ package vwr.game.spacegame
 	import flash.events.Event;
 	
 	[SWF(width = '640', height = '400', backgroundColor = '#000000', frameRate = 60)]
-	//this isn't the rate that the game updates at. Check Settings.as
 	/**
 	 * ...
 	 * @author Victor Reynolds

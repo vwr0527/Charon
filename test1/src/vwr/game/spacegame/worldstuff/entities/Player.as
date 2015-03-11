@@ -16,6 +16,7 @@ package vwr.game.spacegame.worldstuff.entities
 		
 		[Embed(source = "/../../sprite/ship_col.png")]
 		private var picture:Class;
+		private var speed:Number = 1;
 		
 		public function Player() 
 		{
@@ -27,14 +28,30 @@ package vwr.game.spacegame.worldstuff.entities
 			pic.y = -pic.bitmapData.height / 4;
 			pic.scaleX = 0.5;
 			pic.scaleY = 0.5;
-			addChild(pic);
+			addChildAt(pic, 0);
+			hitbox.visible = true;
+			hitbox.width = 30;
+			hitbox.height = 30;
+			noclip = false;
 			
 			friction = 0.95;
         }
 		
+		public function AimAt(xpos:Number, ypos:Number):void
+		{
+			var targetRotation:Number = ((180 / Math.PI) * Math.atan2(ypos - y, xpos - x)) + 90;
+			if (targetRotation >= 180) targetRotation -= 360;
+			var deltaRotation:Number = targetRotation - rotation;
+			if (deltaRotation > 180) deltaRotation -= 360;
+			if (deltaRotation < -180) deltaRotation += 360;
+			//trace ("current: " + rotation + " , target: " + targetRotation);
+			if (deltaRotation > 30) deltaRotation = 30;
+			if (deltaRotation < -30) deltaRotation = -30;
+			rotvel = deltaRotation / 3;
+		}
+		
 		public override function Update():void
 		{
-			var speed:Number = 1;
 			var diag:Number = speed * 0.707;
 			var skip:Boolean = false;
 			if (!(Input.moveDown() == 1 && Input.moveUp() == 1))
@@ -82,6 +99,8 @@ package vwr.game.spacegame.worldstuff.entities
 				if (Input.moveDown() == 1)
 					yvel += speed;
 			}
+			
+			
 			
 			super.Update();
 		}

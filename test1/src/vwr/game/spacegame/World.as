@@ -4,7 +4,8 @@ package vwr.game.spacegame
 	import vwr.game.spacegame.worldstuff.entities.*;
 	import vwr.game.spacegame.worldstuff.Entity;
 	import vwr.game.spacegame.worldstuff.Room;
-	import vwr.game.spacegame.worldstuff.rooms.TestRoom1;
+	import vwr.game.spacegame.worldstuff.Tile;
+	import vwr.game.spacegame.worldstuff.rooms.*;
 	
 	/**
 	 * ...
@@ -15,6 +16,7 @@ package vwr.game.spacegame
 		private var sequenceNumber:Number;
 		private var player:Player;
 		private var camera:Camera;
+		private var cursor:Cursor;
 		private var currentRoom:Room;
 		private var roomList:Array;
 		private var activeEntityList:Array;
@@ -24,17 +26,17 @@ package vwr.game.spacegame
 		private var minx:Number;
 		private var miny:Number;
 		
-		private var elasticity:Number = 0.7;
-		
 		public function World() 
 		{
 			super();
 			sequenceNumber = 0;
 			
 			roomList = new Array();
-			currentRoom = new TestRoom1();
+			currentRoom = new TestRoom2();
+			cursor = new Cursor();
 			roomList.push(currentRoom);
 			addChild(currentRoom);
+			addChild(cursor);
 			
 			maxx = currentRoom.startx + currentRoom.roomWidth;
 			maxy = currentRoom.starty + currentRoom.roomHeight;
@@ -58,33 +60,27 @@ package vwr.game.spacegame
 		{
 			++sequenceNumber;
 			
-			
 			//section
 			//update all entities
 			for each(var ent:Entity in activeEntityList)
 			{
 				ent.Update();
-				//section
-				//Confine to room
-				if (ent.x > maxx)
+				if (ent.noclip == false)
 				{
-					ent.x = maxx;
-					ent.xvel *= -elasticity;
-				}
-				if (ent.y > maxy)
-				{
-					ent.y = maxy;
-					ent.yvel *= -elasticity;
-				}
-				if (ent.x < minx)
-				{
-					ent.x = minx;
-					ent.xvel *= -elasticity;
-				}
-				if (ent.y < miny)
-				{
-					ent.y = miny;
-					ent.yvel *= -elasticity;
+					//section
+					//Confine to room
+					ent.Confine(minx, miny, maxx, maxy);
+					//collide with tiles
+					for each (var row:Array in currentRoom.tileGrid)
+					{
+						for each (var tile:Tile in row)
+						{
+							if (tile.noclip == false)
+							{
+								ent.HitTile(tile);
+							}
+						}
+					}
 				}
 			}
 			
@@ -92,6 +88,18 @@ package vwr.game.spacegame
 			camera.yvel = (player.y - camera.y) / 10;
 			x = (stage.stageWidth / 2) - camera.x;
 			y = (stage.stageHeight / 2) - camera.y;
+			
+			
+			currentRoom.bg.x = -x * 0.5;
+			currentRoom.bg.y = -y * 0.5;
+			currentRoom.bg.x -= currentRoom.bg.width / 10;
+			currentRoom.bg.y -= currentRoom.bg.height / 10;
+			
+			cursor.x = mouseX;
+			cursor.y = mouseY;
+			
+			cursor.Update();
+			player.AimAt(cursor.x, cursor.y);
 		}
 	}
 

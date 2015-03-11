@@ -2,6 +2,7 @@ package vwr.game.spacegame.worldstuff
 {
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.display.Bitmap;
 	import vwr.game.spacegame.worldstuff.Tile;
 	/**
 	 * ...
@@ -19,6 +20,7 @@ package vwr.game.spacegame.worldstuff
 		public var numRows:int = 10;
 		public var numCols:int = 16;
 		public var tileGrid:Array;
+		public var bg:Bitmap;
 		
 		public function Room() 
 		{

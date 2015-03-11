@@ -1,8 +1,7 @@
 package vwr.game.spacegame.worldstuff 
 {
+	import flash.display.Shape;
 	import flash.display.Sprite;
-	import flash.display.Bitmap;
-	import flash.geom.Point;
 	
 	/**
 	 * ...
@@ -10,23 +9,17 @@ package vwr.game.spacegame.worldstuff
 	 */
 	public class Tile extends Sprite 
 	{
-		
-		[Embed(source = "/../../sprite/mtile01.png")]
-		private var picture:Class;
-		
+		public var noclip:Boolean = false;
+		public var hitbox:Shape;
 		public function Tile() 
 		{
 			super();
-			var pic:Bitmap = new picture();
-			pic.smoothing = true;
-			pic.bitmapData.threshold(pic.bitmapData, pic.bitmapData.rect, new Point(0, 0), "==", 0xffff00ff);
-			//pic.x = -pic.bitmapData.width / 2;
-			//pic.y = -pic.bitmapData.height / 2;
-			//pic.width /= 2;
-			//pic.height /= 2;
-			addChild(pic);
+			hitbox = new Shape();
+			hitbox.graphics.beginFill(0x1144ff, 1);
+			hitbox.graphics.drawRect( 0,0, 16, 16);
+			hitbox.graphics.endFill();
+			addChild(hitbox);
 		}
-		
 	}
 
 }
