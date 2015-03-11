@@ -96,17 +96,6 @@ package vwr.game.spacegame
 				activeEntityList.push(toAdd);
 			}
 			
-			if (player.MouseDown())
-			{
-				if (sequenceNumber % 7 == 0)
-				{
-					for (var i:int = 0; i < shotArray.length; ++i)
-					{
-						if ((shotArray[i] as Shot).Shoot(player.x, player.y, player.rotation)) break;
-					}
-				}
-			}
-			
 			//update all entities
 			for each(var ent:Entity in activeEntityList)
 			{
@@ -117,11 +106,71 @@ package vwr.game.spacegame
 				ent.Update();
 				if (ent.noclip == false)
 				{
+					//Collider with other ents
+					for each (var othent:Entity in activeEntityList)
+					{
+						if (othent is Shot && ent is Enemy)
+						{
+							if ((othent as Shot).IsActive())
+							if (othent.x > ent.x - ent.hitwidth / 2 && othent.x < ent.x + ent.hitwidth / 2
+								&& othent.y > ent.y - ent.hitheight / 2 && othent.y < ent.y + ent.hitheight / 2)
+							{
+								(othent as Shot).DoHit();
+								ent.x = (Math.random() * 3280) - 1000;
+								ent.y = (Math.random() * 2800) - 1000;
+							}
+						}
+					}
+					
 					//Confine to room
 					ent.Confine(minx, miny, maxx, maxy);
 					ent.CollideTiles(currentRoom);
 				}
 			}
+			
+			//Shooting lasers :D
+			if (player.MouseDown())
+			{
+				if (sequenceNumber % 4 == 1)
+				{
+					var playerRotRad:Number = -(player.rotation / 180) * Math.PI;
+					
+					var shotOffsetY:Number = -25;
+					var shotOffsetX:Number = 33;
+					
+					var realShotOffsetX:Number = Math.sin(playerRotRad) * shotOffsetY;
+					var realShotOffsetY:Number = Math.cos(playerRotRad) * shotOffsetY;
+					if (sequenceNumber % 8 == 1)
+					{
+						realShotOffsetX += Math.sin(playerRotRad + (Math.PI / 2)) * shotOffsetX;
+						realShotOffsetY += Math.cos(playerRotRad + (Math.PI / 2)) * shotOffsetX;
+					}
+					else
+					{
+						realShotOffsetX += Math.sin(playerRotRad - (Math.PI / 2)) * shotOffsetX;
+						realShotOffsetY += Math.cos(playerRotRad - (Math.PI / 2)) * shotOffsetX;
+					}
+					
+					var realShotOriginX:Number = player.x + realShotOffsetX;
+					var realShotOriginY:Number = player.y + realShotOffsetY;
+					
+					var shotOriginToCrosshairRotation:Number = ((Math.atan2(realShotOriginY - cursor.y, realShotOriginX - cursor.x) / Math.PI) * 180) - 90;
+					
+					for (var i:int = 0; i < shotArray.length; ++i)
+					{
+						if ((shotArray[i] as Shot).Shoot(realShotOriginX, realShotOriginY, shotOriginToCrosshairRotation))
+						{
+							(shotArray[i] as Shot).Update();
+							break;
+						}
+					}
+				}
+			}
+			else
+			{
+				sequenceNumber = 0;
+			}
+			
 			
 			followPoint.x = (cursor.x + (player.x * 2)) / 3;
 			followPoint.y = (cursor.y + (player.y * 2)) / 3;

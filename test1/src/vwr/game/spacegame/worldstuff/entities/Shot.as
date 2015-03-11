@@ -32,14 +32,14 @@ package vwr.game.spacegame.worldstuff.entities
 			var pic:Bitmap = new picture();
 			pic.smoothing = true;
 			pic.bitmapData.threshold(pic.bitmapData, pic.bitmapData.rect, new Point(0, 0), "==", 0xffff00ff);
-			pic.bitmapData.colorTransform(pic.bitmapData.rect, new ColorTransform(2, 0.5, 0.5, 1, 250, 50, 50, 0));
+			pic.bitmapData.colorTransform(pic.bitmapData.rect, new ColorTransform(1, 2, 2, 1, 50, -255, -255, 0));
 			
 			var scaleFac:Number = 0.75;
 			
 			pic.scaleX = scaleFac;
 			pic.scaleY = scaleFac;
 			pic.x = -(pic.bitmapData.width / 2) * scaleFac;
-			pic.y = -(pic.bitmapData.height / 2) * scaleFac;
+			pic.y = -(pic.bitmapData.height / 4) * scaleFac;
 			
 			pic.alpha = 1.0;
 			addChildAt(pic, 0);
@@ -108,8 +108,9 @@ package vwr.game.spacegame.worldstuff.entities
 			HitTile(currentRoom.tileGrid[closest_index_y][closest_index_x]);
 		}
 		
-		private function HitTile(tile:Tile):void
+		protected override function HitTile(tile:Tile):void
 		{
+			if (impact != 0) return;
 			if (tile == null) return;
 			if (tile.noclip) return;
 			/*if (tile is DiagTile)
@@ -117,25 +118,106 @@ package vwr.game.spacegame.worldstuff.entities
 				HitDiagTile(tile as DiagTile);
 				return;
 			}*/
+			
+			var dx:Number = x - px;
+			var dy:Number = y - py;
+			var tx:Number = 0;  //time x hit = 0 is beginning time, 1 is end time
+			var ty:Number = 0;  //time y hit
+			
+			var pass_x:Boolean = px >= tile.x + tile.width || px <= tile.x;
+			var pass_y:Boolean = py >= tile.y + tile.height || py <= tile.y;
+			
+			if (pass_x)
+			{
+				if (dx > 0)
+				{
+					tx = Math.abs((px - tile.x) / dx);
+				}
+				else
+				{
+					tx = Math.abs((px - (tile.x + tile.width)) / dx);
+				}
+			}
+			
+			if (pass_y)
+			{
+				if (dy > 0)
+				{
+					ty = Math.abs((py - tile.y) / dy);
+				}
+				else
+				{
+					ty = Math.abs((py - (tile.y + tile.height)) / dy);
+				}
+			}
+			
+			if (pass_x && pass_y)
+			{
+				//get the y when x intercepts tile.x
+				var temp_y:Number = py + (dy * ty);
+				if (temp_y > tile.y + tile.height || temp_y < tile.y)
+				{
+					//let the next part handle it
+					pass_y = false;
+				}
+				else
+				{
+					pass_x = false;
+				}
+			}
+			
+			if (pass_x)
+			{
+				x = px + (dx * tx);
+				y = py + (dy * tx);
+			}
+			else if (pass_y)
+			{
+				x = px + (dx * ty);
+				y = py + (dy * ty);
+			}
+			
 			DoHit();
 		}
 		
-		private function DoHit():void
+		public function DoHit():void
 		{
 			if (impact != 0) return;
 			impact = 1;
 			counter = 0;
 			xvel = 0;
 			yvel = 0;
+			
+			getChildAt(0).alpha = 0;
+			getChildAt(1).alpha = 1;
+			rotation = Math.random() * 360;
+			scaleX = scaleY = 2.2;
 		}
 		
 		public override function Update():void
 		{
 			++counter;
+			//counter 1 is for muzzle flash, counter 2 is for extra distance before leaving barrel
+			if (impact == 0)
+			{
+				if (counter == 1)
+				{
+					//borrowing rotfric as a holder for previous rotation
+					rotfric = rotation;
+					rotation = Math.random() * 360;
+					return;
+				}
+				if (counter == 2)
+				{
+					rotation = rotfric;
+					x += xvel / 3;
+					y += yvel / 3;
+				}
+			}
 			if (impact > 0 && impact <= 4)
 			{
 				getChildAt(0).alpha = 0;
-				getChildAt(1).alpha = (4 - impact) * 1.0;
+				getChildAt(1).alpha = ((3 - impact) + 2) * 0.25;
 				rotation = Math.random() * 360;
 				scaleX = scaleY = (4 - impact) * 1.0;
 				++impact;
@@ -169,9 +251,17 @@ package vwr.game.spacegame.worldstuff.entities
 				rotation = dir;
 				impact = 0;
 				counter = 0;
+				getChildAt(0).alpha = 0;
+				getChildAt(1).alpha = 1;
+				scaleX = scaleY = 2;
 				return true;
 			}
 			return false;
+		}
+		
+		public function IsActive():Boolean
+		{
+			return impact == 0;
 		}
 	}
 

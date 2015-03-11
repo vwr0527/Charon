@@ -23,7 +23,7 @@ package vwr.game.spacegame.worldstuff
 		private var hitboxGraphic:Shape;
 		public var noclip:Boolean = true;
 		public var showhitbox:Boolean = false;
-		private var extraPush:Number = 0.1;
+		private static const extraPush:Number = 0.1;
 		
 		public function Entity() 
 		{
@@ -175,7 +175,7 @@ package vwr.game.spacegame.worldstuff
 			}
 		}
 		
-		private function HitTile(tile:Tile):void
+		protected function HitTile(tile:Tile):void
 		{
 			if (tile == null) return;
 			if (tile.noclip) return;
@@ -253,9 +253,8 @@ package vwr.game.spacegame.worldstuff
 			}
 		}
 		
-		private function DoCornerBounce(entityCornerX:Number, entityCornerY:Number, tileCornerX:Number, tileCornerY:Number):void 
+		protected function DoCornerBounce(entityCornerX:Number, entityCornerY:Number, tileCornerX:Number, tileCornerY:Number):void 
 		{
-			trace("corner");
 			// if entityCornerX exceeds tileCornerX
 			// and entCornerY exceeds tileCornerY
 				//figure out if the cornerpoint crossed the vertical or horizontal
@@ -294,7 +293,7 @@ package vwr.game.spacegame.worldstuff
 			}
 		}
 		
-		private function BounceX(pushOut:Number):void 
+		protected function BounceX(pushOut:Number):void 
 		{
 			x = x + pushOut;
 			
@@ -325,7 +324,7 @@ package vwr.game.spacegame.worldstuff
 				}
 			}
 		}
-		private function BounceY(pushOut:Number):void 
+		protected function BounceY(pushOut:Number):void 
 		{
 			y = y + pushOut;
 			if (pushOut >= 0)
@@ -356,7 +355,7 @@ package vwr.game.spacegame.worldstuff
 			}
 		}
 		
-		private function HitDiagTile(tile:DiagTile):void 
+		protected function HitDiagTile(tile:DiagTile):void 
 		{
 			//if diagtype == 3, bottom left
 			//0 = topleft
