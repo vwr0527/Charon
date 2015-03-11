@@ -35,8 +35,8 @@ package vwr.game.spacegame.worldstuff
 			// a(-p + 1) + c(-p + 1) + bp
 			// (1 - p)(a + b) + bp
 			
-			this.x = ((1 - parralax) * ((Main.gameWidth / 2) + this.offset.x)) + (camera.x * parralax);
-			this.y = ((1 - parralax) * ((Main.gameHeight / 2) + this.offset.y)) + (camera.y * parralax);
+			this.x = ((1 - parralax) * this.offset.x) + (camera.x * parralax);
+			this.y = ((1 - parralax) * this.offset.y) + (camera.y * parralax);
 			pic.x = -pic.width / 2;
 			pic.y = -pic.height / 2;
 		}

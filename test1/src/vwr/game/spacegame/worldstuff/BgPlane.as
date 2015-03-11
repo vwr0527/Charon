@@ -59,8 +59,8 @@ package vwr.game.spacegame.worldstuff
 			//p.x = ((offset.x * (1 - parra)) - (worldX * parra)) + (Main.gameWidth / 2);
 			//p.y = ((offset.y * (1 - parra)) - (worldY * parra)) + (Main.gameHeight / 2);
 			
-			p.x = ((1 - parra) * ((Main.gameWidth / 2) + offset.x)) + (worldX * parra);
-			p.y = ((1 - parra) * ((Main.gameHeight / 2) + offset.y)) + (worldY * parra);
+			p.x = ((1 - parra) * offset.x) + (worldX * parra);
+			p.y = ((1 - parra) * offset.y) + (worldY * parra);
 		}
 		
 		public static function AlterBitmap(bmp:Bitmap, newWidth:int = 0, newHeight:int = 0, transparency:Boolean = false, matrix:Matrix = null, scaleX:Number = 1, scaleY:Number = 1, startX:Number = 0, startY:Number = 0, rotation:Number = 0, repeating:Boolean = true):Bitmap

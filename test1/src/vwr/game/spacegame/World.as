@@ -26,6 +26,7 @@ package vwr.game.spacegame
 		private var tilesTouching:Array;
 		private var shotList:Array;
 		private var enemyList:Array;
+		private var explosionList:Array;
 		
 		private var maxx:Number;
 		private var maxy:Number;
@@ -73,13 +74,20 @@ package vwr.game.spacegame
 			for (var i:int = 0; i < 30; ++i)
 			{
 				var newshot:Shot = new Shot();
-				if (i == 0) newshot.elasticity = 0.54321;
 				activeEntityList.push(newshot);
 				addChild(newshot);
 				shotList.push(newshot);
 			}
 			
 			enemyList = new Array();
+			explosionList = new Array();
+			
+			for (i = 0; i < 10; ++i)
+			{
+				var newexplosion:Explosion = new Explosion();
+				explosionList.push(newexplosion);
+				addChild(newexplosion);
+			}
 		}
 		
 		public function Update():void
@@ -128,9 +136,19 @@ package vwr.game.spacegame
 				
 				if (closestEnemy != null)
 				{
-					closestEnemy.x = 0;// (Math.random() * currentRoom.roomWidth) + currentRoom.startx;
-					closestEnemy.y = 0;// (Math.random() * currentRoom.roomHeight) + currentRoom.starty;
+					//closestEnemy.x = 0;// (Math.random() * currentRoom.roomWidth) + currentRoom.startx;
+					//closestEnemy.y = 0;// (Math.random() * currentRoom.roomHeight) + currentRoom.starty;
+					closestEnemy.GetHit(shot);
+					if (closestEnemy.IsDead())
+					{
+						closestEnemy.Explode(CreateExplosion);
+						closestEnemy.Respawn();
+					}
 				}
+			}
+			for each(var expl:Explosion in explosionList)
+			{
+				expl.Update();
 			}
 			
 			player.HandleShooting(ShootLaser, cursor.x, cursor.y);
@@ -158,6 +176,17 @@ package vwr.game.spacegame
 				{
 					(shotList[i] as Shot).Update();
 					(shotList[i] as Shot).CollideTiles(currentRoom);
+					break;
+				}
+			}
+		}
+		
+		private function CreateExplosion(x:Number, y:Number, exlosiontype:int):void
+		{
+			for (var i:int = 0; i < explosionList.length; ++i)
+			{
+				if ((explosionList[i] as Explosion).ExplodeAt(x, y))
+				{
 					break;
 				}
 			}

@@ -12,8 +12,8 @@ package vwr.game.spacegame.worldstuff
 	{
 		public var xvel:Number = 0.0;
 		public var yvel:Number = 0.0;
-		protected var px:Number = 0.0;
-		protected var py:Number = 0.0;
+		public var px:Number = 0.0;
+		public var py:Number = 0.0;
 		public var hitwidth:Number = 0.0;
 		public var hitheight:Number = 0.0;
 		public var rotvel:Number = 0.0;

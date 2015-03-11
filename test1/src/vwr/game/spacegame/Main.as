@@ -4,7 +4,7 @@ package vwr.game.spacegame
 	import flash.events.Event;
 	import flash.utils.Dictionary;
 	
-	[SWF(width = '640', height = '400', backgroundColor = '#000000', frameRate = 60)]
+	[SWF(width = '730', height = '450', backgroundColor = '#000000', frameRate = 60)]
 	/**
 	 * ...
 	 * @author Victor Reynolds
@@ -12,8 +12,8 @@ package vwr.game.spacegame
 	public class Main extends Sprite 
 	{
 		public static var DynamicSettings:Dictionary = new Dictionary();
-		public static var gameWidth:int = 640;
-		public static var gameHeight:int = 400;
+		public static var gameWidth:int = 730;
+		public static var gameHeight:int = 450;
 		
 		public function Main():void 
 		{

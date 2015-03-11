@@ -10,8 +10,11 @@ package vwr.game.spacegame.worldstuff.entities
 	public class Camera extends Entity 
 	{
 		public var zoom:Number = 1;
-		public var targetZoom:Number = 0.9;
-		public var maxDistance:Number = 400;
+		public var targetZoom:Number = 0.8;
+		public var maxDistance:Number = 350;
+		public var zoomDistanceRate:Number = 1000;
+		public var maxZoomAmt:Number = 0.2;
+		
 		private var followPoint:Point = new Point();
 		
 		public function Camera() 
@@ -40,7 +43,7 @@ package vwr.game.spacegame.worldstuff.entities
 				followPoint.x = playerX + (((cursorX - playerX) / fpDist) * maxDistance / 3);
 				followPoint.y = playerY + (((cursorY - playerY) / fpDist) * maxDistance / 3);
 			}
-			zoom = targetZoom - Math.min(Math.sqrt(Math.pow((playerX - followPoint.x) / (stage.stageWidth / stage.stageHeight), 2) + Math.pow(playerY - followPoint.y, 2)) / 1000, 0.2);
+			zoom = targetZoom - Math.min(Math.sqrt(Math.pow((playerX - followPoint.x) / (stage.stageWidth / stage.stageHeight), 2) + Math.pow(playerY - followPoint.y, 2)) / zoomDistanceRate, maxZoomAmt);
 		}
 	}
 

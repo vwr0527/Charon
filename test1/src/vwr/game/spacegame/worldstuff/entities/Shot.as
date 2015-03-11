@@ -496,5 +496,10 @@ package vwr.game.spacegame.worldstuff.entities
 		{
 			return impact == 0;
 		}
+		
+		public function GetDamage():Number
+		{
+			return 4;
+		}
 	}
 }

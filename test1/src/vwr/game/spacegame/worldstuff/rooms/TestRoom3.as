@@ -142,8 +142,8 @@ package vwr.game.spacegame.worldstuff.rooms
 			addChild(backDrop);
 			backDrop.pic.width = 760;
 			backDrop.pic.height = 720;
-			backDrop.offset.x = 540;
-			backDrop.offset.y = 200;
+			backDrop.offset.x = 860;
+			backDrop.offset.y = 400;
 			bgObjs.push(backDrop);
 			backDrop.parralax = 0.05;
 			

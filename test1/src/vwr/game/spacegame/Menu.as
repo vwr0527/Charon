@@ -40,6 +40,7 @@ package vwr.game.spacegame
 			var bgbmp:Bitmap = new bgpic();
 			bgbmp.x -= bgbmp.bitmapData.width / 2;
 			bgbmp.y -= bgbmp.bitmapData.height / 2;
+			bgbmp.smoothing = true;
 			addChildAt(bgbmp, 0);
 		}
 		

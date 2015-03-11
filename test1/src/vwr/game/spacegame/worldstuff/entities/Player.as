@@ -219,11 +219,11 @@ package vwr.game.spacegame.worldstuff.entities
 		
 		private function HandleThrustAnimation():void 
 		{
-			var thrustPlumeMult:Number = 0.15;
+			var thrustPlumeMult:Number = 0.125;
 			var thrustDieDown:Number = 0.85;
-			var thrustAlphaMult:Number = 2;
+			var thrustAlphaMult:Number = 1.5;
 			var thrustMinLength:Number = 0.2;
-			var thrustRandomLength:Number = 0.15;
+			var thrustRandomLength:Number = 0.2;
 		
 			var thrustDir:Number = Math.atan2((Input.moveDown() - Input.moveUp()), (Input.moveRight() - Input.moveLeft()));
 			thrustDir -= (rotation / 180) * Math.PI;
