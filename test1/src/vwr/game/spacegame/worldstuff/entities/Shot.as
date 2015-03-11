@@ -5,6 +5,7 @@ package vwr.game.spacegame.worldstuff.entities
 	import flash.display.DisplayObject;
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
+	import vwr.game.spacegame.worldstuff.entities.shots.SlowRedLaser;
 	import vwr.game.spacegame.worldstuff.Entity;
 	import vwr.game.spacegame.Input;
 	import vwr.game.spacegame.worldstuff.Room;
@@ -16,28 +17,29 @@ package vwr.game.spacegame.worldstuff.entities
 	 */
 	public class Shot extends Entity 
 	{
-		private var controlEnabled:Boolean = true;
-		
 		[Embed(source = "/../../sprite/shot01.png")]
-		private var picture:Class;
+		protected var picture:Class;
+		protected var pic:Bitmap;
 		[Embed(source = "/../../sprite/hit01.png")]
-		private var hitpic:Class;
+		protected var hitpic:Class;
+		protected var pic2:Bitmap;
 		
-		private var speed:Number = 30;
-		private var impact:int = 5; // 0 = traveling, 1 or more is frames after hit
-		private var counter:int = 0;
-		private var laserSize:Number = 0.65;
-		private var laserLengthFactor:Number = 0.035;
-		private var impactSize:Number = 0.75;
-		private var slope:Number = 0;
-		private var intercept:Number = 0;
+		protected var speed:Number = 30;
+		protected var damage:Number = 4;
+		
+		protected var impact:int = 5; // 0 = traveling, 1 or more is frames after hit
+		protected var counter:int = 0;
+		protected var laserSize:Number = 0.65;
+		protected var laserLengthFactor:Number = 0.035;
+		protected var impactSize:Number = 0.75;
+		protected var slope:Number = 0;
+		protected var intercept:Number = 0;
 		
 		public function Shot() 
 		{
 			super();
-			var pic:Bitmap = new picture();
-			pic.smoothing = true;
-			pic.bitmapData.threshold(pic.bitmapData, pic.bitmapData.rect, new Point(0, 0), "==", 0xffff00ff);
+			pic = new picture();
+			pic.smoothing = false;
 			pic.bitmapData.colorTransform(pic.bitmapData.rect, new ColorTransform(1, 2, 2, 1, 50, -255, -255, 0));
 			
 			pic.scaleX = laserSize;
@@ -49,9 +51,8 @@ package vwr.game.spacegame.worldstuff.entities
 			addChildAt(pic, 0);
 			
 			//impact pic
-			var pic2:Bitmap = new hitpic();
-			pic2.smoothing = true;
-			pic2.bitmapData.threshold(pic2.bitmapData, pic2.bitmapData.rect, new Point(0, 0), "==", 0xffff00ff);
+			pic2 = new hitpic();
+			pic2.smoothing = false;
 			pic2.bitmapData.colorTransform(pic2.bitmapData.rect, new ColorTransform(1.2, 1.2, 1.2, 1, 0, -50, -50, 0));
 			
 			pic2.scaleX = impactSize;
@@ -100,21 +101,6 @@ package vwr.game.spacegame.worldstuff.entities
 			
 			//if no tiles, do nothing
 			if (currentRoom.tileGrid.length == 0) return;
-			/*
-			//if outside of tileGrid's bounds, do nothing
-			//TODO: Take into account corner cutting
-			if ((this.y < 0
-			|| this.x < 0
-			|| this.y > (currentRoom.numRows * currentRoom.tileHeight)
-			|| this.x > (currentRoom.numCols * currentRoom.tileWidth))
-			&&
-			(this.py < 0
-			|| this.px < 0
-			|| this.py > (currentRoom.numRows * currentRoom.tileHeight)
-			|| this.px > (currentRoom.numCols * currentRoom.tileWidth)))
-			{
-				return;
-			}*/
 			
 			//line collision
 			var sxi:int = 0; //start x index
@@ -223,7 +209,7 @@ package vwr.game.spacegame.worldstuff.entities
 			HitSquare(tile.x, tile.y, tile.x + tile.width, tile.y + tile.height);
 		}
 		
-		//returns true or false. let world handle it.
+		//returns true or false. don't modify ent. let world handle it.
 		public function HitEnt(ent:Entity):Boolean
 		{
 			if (ent == null || ent.noclip == true || impact > 1 || this.noclip == true)
@@ -238,6 +224,8 @@ package vwr.game.spacegame.worldstuff.entities
 			
 			if (DidIntersectSquare(minx, miny, maxx, maxy))
 			{
+				//we know it must have at least hit something this far away.
+				//it may have hit something closer, but it's correct to modify its coordinates.
 				HitSquare(minx, miny, maxx, maxy);
 				return true;
 			}
@@ -499,7 +487,7 @@ package vwr.game.spacegame.worldstuff.entities
 		
 		public function GetDamage():Number
 		{
-			return 4;
+			return damage;
 		}
 	}
 }

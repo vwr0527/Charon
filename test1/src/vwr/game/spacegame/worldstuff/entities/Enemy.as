@@ -36,6 +36,8 @@ package vwr.game.spacegame.worldstuff.entities
 		private var ai_strafe:Boolean = false;
 		private var ai_counter:int = 0;
 		private var ai_stunned:int = 0;
+		private var ai_shootreload:int = 0;
+		private var ai_shootready:Boolean = false;
 		private var active:Boolean = true;
 		private var health:Number = 10.0;
 		
@@ -152,6 +154,7 @@ package vwr.game.spacegame.worldstuff.entities
 				var yimpulse:Number = yvel * friction + Math.cos(rotRad) * speed * moveFactor;
 				var impulse:Number = Math.sqrt(Math.pow(ximpulse, 2) + Math.pow(yimpulse, 2));
 				thst.alpha = Math.max((1 - (impulse / 2)), 0.1 + Math.random() * 0.05) * (strafeSpeedFactor * 6);
+				ai_shootready = true;
 			}
 			else
 			{
@@ -177,6 +180,7 @@ package vwr.game.spacegame.worldstuff.entities
 				setThrustDir(0, thst);
 					
 				thst.alpha = Math.min(1, ((distToTarget - strafingDistance) / 40));
+				ai_shootready = false;
 			}
 			
 			xvel += Math.sin(rotRad) * speed * moveFactor;
@@ -206,7 +210,7 @@ package vwr.game.spacegame.worldstuff.entities
 				strafeAngle = -70;
 			}
 			
-			hit1.alpha *= 0.9;
+			hit1.alpha *= 0.75;
 			hit2.alpha *= 0.95;
 			hitparent.rotation -= rotvel;
 			--ai_stunned;
@@ -215,7 +219,7 @@ package vwr.game.spacegame.worldstuff.entities
 		
 		public function GetHit(shot:Shot):void
 		{
-			hit1.alpha = 2 + Math.random();
+			hit1.alpha = 4 + Math.random();
 			hit2.alpha = 0.5 + Math.random() * 0.5;
 			health -= shot.GetDamage();
 			if (health < 0) active = false;
@@ -224,6 +228,17 @@ package vwr.game.spacegame.worldstuff.entities
 			rotvel += (Math.random() * 20) - 10;
 			ai_stunned = 10 + Math.random() * 10;
 			hitparent.rotation = -rotation + (((180 / Math.PI) * Math.atan2(y - shot.y, x - shot.x)) - 90);
+		}
+		
+		public function HandleShooting(shootLaserFunc:Function):void
+		{
+			var rotRad:Number = (rotation / 180) * Math.PI;
+			--ai_shootreload;
+			if (ai_shootreload <= 0 && ai_shootready)
+			{
+				ai_shootreload = 30 + (Math.random() * 30);
+				shootLaserFunc(x + Math.sin(rotRad) * 15, y - Math.cos(rotRad) * 15, rotation);
+			}
 		}
 		
 		public function IsDead():Boolean

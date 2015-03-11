@@ -94,6 +94,8 @@ package vwr.game.spacegame.worldstuff
 		}
 		public function UpdateBG(camera:Camera):void
 		{
+			if (this.bg == null) return;
+			
 			this.bg.x = camera.x * parralax;
 			this.bg.y = camera.y * parralax;
 			this.bg.scaleX = this.bg.scaleY = bgScale;

@@ -28,7 +28,6 @@ package vwr.game.spacegame.worldstuff.entities
 		
 		private var counter:Number = 0;
 		
-		
 		public function Explosion() 
 		{
 			visible = false;
@@ -49,7 +48,7 @@ package vwr.game.spacegame.worldstuff.entities
 			bangc.addChild(bang);
 			
 			dark = new mediumexplodepic();
-			dark.bitmapData.colorTransform(dark.bitmapData.rect, new ColorTransform(1, 0.5, 0.5, 1, -50, -100, -100, 0));
+			dark.bitmapData.colorTransform(dark.bitmapData.rect, new ColorTransform(0.2, 0.1, 0.2, 1, 80, 70, 80, 0));
 			dark.x -= dark.width / 2;
 			dark.y -= dark.height / 2;
 			darkc = new Sprite();
@@ -63,33 +62,21 @@ package vwr.game.spacegame.worldstuff.entities
 		{
 			if (counter > 0)
 			{
+				counter -= 1 * ((Math.random() / 2) + 0.5);
 				visible = true;
-				counter -= (Math.random() / 2) + 0.5;
-				
 				alpha = counter / 15;
 				
-				var shock:Number = 30 - counter;
-				if (counter < 25)
+				var shock:Number = (40 - counter) * 0.4;
+				if (counter < 23)
 				{
-					shock = counter / 5;
+					shock = (counter / 8) + 4;
 				}
-				else
-				{
-					rotation = Math.random() * 360;
-				}
-				medc.scaleX = medc.scaleY = ((shock * shock) / 80) + 0.75;
+				medc.scaleX = medc.scaleY = (shock / 8) + 0.1;
 				medc.alpha = counter / 30;
-				darkc.scaleX = darkc.scaleY = ((100 - counter) + shock) / 60;
-				darkc.alpha = 0.5;
-				if (counter > 25)
-				{
-					bangc.scaleX = bangc.scaleY = (counter - 25) / 2.5;
-					bangc.alpha = (counter - 25) / 4;
-				}
-				else
-				{
-					bangc.alpha = 0;
-				}
+				darkc.scaleX = darkc.scaleY = 0.8 + ((30 - counter) / 20);
+				darkc.alpha = shock / 14;
+				bangc.scaleX = bangc.scaleY = 0.35 + Math.max(0,(counter - 25) / 3);
+				bangc.alpha = Math.max(0, (counter - 25) / 4);
 			}
 			else
 			{
@@ -104,6 +91,7 @@ package vwr.game.spacegame.worldstuff.entities
 				x = xpos;
 				y = ypos;
 				counter = 30;
+				rotation = Math.random() * 360;
 				return true;
 			}
 			return false;

@@ -3,6 +3,7 @@ package vwr.game.spacegame
 	import flash.display.Sprite;
 	import flash.geom.Point;
 	import vwr.game.spacegame.worldstuff.entities.*;
+	import vwr.game.spacegame.worldstuff.entities.shots.SlowRedLaser;
 	import vwr.game.spacegame.worldstuff.Entity;
 	import vwr.game.spacegame.worldstuff.Room;
 	import vwr.game.spacegame.worldstuff.Tile;
@@ -25,6 +26,7 @@ package vwr.game.spacegame
 		private var activeEntityList:Array;
 		private var tilesTouching:Array;
 		private var shotList:Array;
+		private var enemyShotList:Array;
 		private var enemyList:Array;
 		private var explosionList:Array;
 		
@@ -58,20 +60,15 @@ package vwr.game.spacegame
 			addChild(camera);
 			activeEntityList.push(player);
 			activeEntityList.push(camera);
-			player.x = 320;//currentRoom.startx + (currentRoom.roomWidth) / 2;
-			player.y = 200;// currentRoom.starty + (currentRoom.roomHeight) / 2;
+			player.x = currentRoom.startx + (currentRoom.roomWidth) / 2;
+			player.y = currentRoom.starty + (currentRoom.roomHeight) / 2;
 			
 			//player.showhitbox = true;
 			camera.x = player.x;
 			camera.y = player.y;
 			
-			player.x = -50;
-			player.y = -50;
-			player.xvel = 0;
-			player.yvel = 0;
-			
 			shotList = new Array();
-			for (var i:int = 0; i < 30; ++i)
+			for (var i:int = 0; i < 50; ++i)
 			{
 				var newshot:Shot = new Shot();
 				activeEntityList.push(newshot);
@@ -82,11 +79,20 @@ package vwr.game.spacegame
 			enemyList = new Array();
 			explosionList = new Array();
 			
-			for (i = 0; i < 10; ++i)
+			for (i = 0; i < 20; ++i)
 			{
 				var newexplosion:Explosion = new Explosion();
 				explosionList.push(newexplosion);
 				addChild(newexplosion);
+			}
+			
+			enemyShotList = new Array();
+			for (i = 0; i < 100; ++i)
+			{
+				var redshot:SlowRedLaser = new SlowRedLaser();
+				enemyShotList.push(redshot);
+				addChild(redshot);
+				activeEntityList.push(redshot);
 			}
 		}
 		
@@ -108,10 +114,6 @@ package vwr.game.spacegame
 			//update all entities
 			for each(var ent:Entity in activeEntityList)
 			{
-				if (ent is Enemy)
-				{
-					(ent as Enemy).SetTarget(player.x, player.y);
-				}
 				ent.Update();
 				if (ent.noclip == false)
 				{
@@ -120,6 +122,11 @@ package vwr.game.spacegame
 					//Confine to room
 					ent.Confine(minx, miny, maxx, maxy);
 					ent.CollideTiles(currentRoom);
+				}
+				if (ent is Enemy)
+				{
+					(ent as Enemy).SetTarget(player.x, player.y);
+					(ent as Enemy).HandleShooting(ShootEnemyLaser);
 				}
 			}
 			//shots check if hit enemies
@@ -136,8 +143,6 @@ package vwr.game.spacegame
 				
 				if (closestEnemy != null)
 				{
-					//closestEnemy.x = 0;// (Math.random() * currentRoom.roomWidth) + currentRoom.startx;
-					//closestEnemy.y = 0;// (Math.random() * currentRoom.roomHeight) + currentRoom.starty;
 					closestEnemy.GetHit(shot);
 					if (closestEnemy.IsDead())
 					{
@@ -146,6 +151,13 @@ package vwr.game.spacegame
 					}
 				}
 			}
+			for each(var eshot:Shot in enemyShotList)
+			{
+				if (!eshot.IsActive()) continue;
+				if (eshot.HitEnt(player))
+					player.GetHit(eshot);
+			}
+			
 			for each(var expl:Explosion in explosionList)
 			{
 				expl.Update();
@@ -176,6 +188,19 @@ package vwr.game.spacegame
 				{
 					(shotList[i] as Shot).Update();
 					(shotList[i] as Shot).CollideTiles(currentRoom);
+					break;
+				}
+			}
+		}
+		
+		private function ShootEnemyLaser(xpos:Number, ypos:Number, dir:Number):void
+		{
+			for (var i:int = 0; i < enemyShotList.length; ++i)
+			{
+				if ((enemyShotList[i] as SlowRedLaser).Shoot(xpos,ypos,dir))
+				{
+					(enemyShotList[i] as SlowRedLaser).Update();
+					(enemyShotList[i] as SlowRedLaser).CollideTiles(currentRoom);
 					break;
 				}
 			}

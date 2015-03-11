@@ -103,17 +103,17 @@ package vwr.game.spacegame.worldstuff.rooms
 			var wallBg:BgPlane = new BgPlane(wp);
 			addChildAt(wallBg, 2);
 			wallBg.offset.x = -3000;
-			wallBg.offset.y = 600;
+			wallBg.offset.y = 800;
 			wallBg.parralax = 0.8;
 			wallBg.offset2.x = 4280;
-			wallBg.offset2.y = 600;
+			wallBg.offset2.y = 800;
 			wallBg.parralax2 = 0.8;
 			wallBg.offset3.x = -3000;
-			wallBg.offset3.y = 2000;
-			wallBg.parralax3 = 0.3;
+			wallBg.offset3.y = 2200;
+			wallBg.parralax3 = -1
 			wallBg.offset4.x = 4280;
-			wallBg.offset4.y = 2000;
-			wallBg.parralax4 = 0.3;
+			wallBg.offset4.y = 2200;
+			wallBg.parralax4 = -1
 			bgObjs.push(wallBg);
 			
 			var strip:Bitmap = new wall();
@@ -122,21 +122,21 @@ package vwr.game.spacegame.worldstuff.rooms
 			var stBg:BgPlane = new BgPlane(strip);
 			addChildAt(stBg, 2);
 			stBg.offset.x = -3000;
-			stBg.offset.y = 400;
+			stBg.offset.y = 800;
 			stBg.parralax = 0.9;
 			stBg.offset2.x = 4280;
-			stBg.offset2.y = 400;
+			stBg.offset2.y = 800;
 			stBg.parralax2 = 0.9;
 			stBg.offset3.x = -3000;
-			stBg.offset3.y = 600;
+			stBg.offset3.y = 800;
 			stBg.parralax3 = 0.8;
 			stBg.offset4.x = 4280;
-			stBg.offset4.y = 600;
+			stBg.offset4.y = 800;
 			stBg.parralax4 = 0.8;
 			bgObjs.push(stBg);
 			
 			var bb:Bitmap = new back();
-			bb = BgPlane.AlterBitmap(bb, 64, 64, false, null, 1.5, 1, -.25);
+			bb = BgPlane.AlterBitmap(bb, 256, 256, false, null, 1.5, 1, -.25);
 			bb.smoothing = true;
 			var backDrop:BgObject = new BgObject(bb);
 			addChild(backDrop);
