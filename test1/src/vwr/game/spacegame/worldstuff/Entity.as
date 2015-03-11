@@ -14,8 +14,6 @@ package vwr.game.spacegame.worldstuff
 		public var yvel:Number = 0.0;
 		private var px:Number = 0.0;
 		private var py:Number = 0.0;
-		private var nx:Number = -10000.0;
-		private var ny:Number = -10000.0;
 		public var hitwidth:Number = 0.0;
 		public var hitheight:Number = 0.0;
 		public var rotvel:Number = 0.0;
@@ -91,6 +89,15 @@ package vwr.game.spacegame.worldstuff
 		
 		public function CollideTiles(currentRoom:Room):void 
 		{
+			//if outside of tileGrid's bounds, do nothing
+			if (this.y + this.hitheight / 2 < 0
+			|| this.x + this.hitwidth / 2 < 0
+			|| this.y - this.hitheight / 2 > (currentRoom.numRows * currentRoom.tileHeight)
+			|| this.x - this.hitwidth / 2 > (currentRoom.numCols * currentRoom.tileWidth))
+			{
+				return;
+			}
+			
 			//collide with tiles
 			var left_index:int = currentRoom.getIndexAtPosX(this.x - this.hitwidth / 2);
 			var right_index:int = currentRoom.getIndexAtPosX(this.x + this.hitwidth / 2);

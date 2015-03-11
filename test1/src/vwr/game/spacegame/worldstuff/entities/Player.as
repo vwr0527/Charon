@@ -30,7 +30,7 @@ package vwr.game.spacegame.worldstuff.entities
 			pic.scaleY = 0.5;
 			pic.alpha = 1.0;
 			addChildAt(pic, 0);
-			showhitbox = true;
+			//showhitbox = true;
 			hitwidth = 30;
 			hitheight = 30;
 			noclip = false;

@@ -28,7 +28,7 @@ package vwr.game.spacegame.worldstuff.rooms
 				for (var j:int = 0; j < numCols; ++j)
 				{
 					var tile:Tile = null;
-					if (i == 0 || i == numRows - 1 || j == 0 || j == numCols - 1 || (j == 16 && i == 10))
+					if (i == 0 || i == numRows - 1 || j == 0 || j == numCols - 1 || (j == 8 && i == 5))
 					{
 						tile = new Metal();
 						tile.x = j * tileWidth;

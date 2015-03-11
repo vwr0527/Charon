@@ -43,7 +43,8 @@ package vwr.game.spacegame.worldstuff.rooms
 			super();
 			
 			bg = new picture();
-			bg.scaleX = bg.scaleY = 2;
+			bgScale = 1.5;
+			parralax = 0.7;
 			addChildAt(bg, 0);
 			
 			numRows = 20;

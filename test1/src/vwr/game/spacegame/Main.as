@@ -2,6 +2,7 @@ package vwr.game.spacegame
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.utils.Dictionary;
 	
 	[SWF(width = '640', height = '400', backgroundColor = '#000000', frameRate = 60)]
 	/**
@@ -10,6 +11,9 @@ package vwr.game.spacegame
 	 */
 	public class Main extends Sprite 
 	{
+		public static var DynamicSettings:Dictionary = new Dictionary();
+		public static var gameWidth:int = 640;
+		public static var gameHeight:int = 400;
 		
 		public function Main():void 
 		{
@@ -24,7 +28,6 @@ package vwr.game.spacegame
 			var game:Game = new Game();
 			addChild(game);
 		}
-		
 	}
 	
 }
