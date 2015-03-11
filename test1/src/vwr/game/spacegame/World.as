@@ -20,6 +20,7 @@ package vwr.game.spacegame
 		private var currentRoom:Room;
 		private var roomList:Array;
 		private var activeEntityList:Array;
+		private var tilesTouching:Array;
 		
 		private var maxx:Number;
 		private var maxy:Number;
@@ -60,6 +61,8 @@ package vwr.game.spacegame
 		{
 			++sequenceNumber;
 			
+			currentRoom.Update();
+			
 			//section
 			//update all entities
 			for each(var ent:Entity in activeEntityList)
@@ -70,17 +73,7 @@ package vwr.game.spacegame
 					//section
 					//Confine to room
 					ent.Confine(minx, miny, maxx, maxy);
-					//collide with tiles
-					for each (var row:Array in currentRoom.tileGrid)
-					{
-						for each (var tile:Tile in row)
-						{
-							if (tile.noclip == false)
-							{
-								ent.HitTile(tile);
-							}
-						}
-					}
+					ent.CollideTiles(currentRoom);
 				}
 			}
 			
@@ -88,7 +81,6 @@ package vwr.game.spacegame
 			camera.yvel = (player.y - camera.y) / 10;
 			x = (stage.stageWidth / 2) - camera.x;
 			y = (stage.stageHeight / 2) - camera.y;
-			
 			
 			currentRoom.bg.x = -x * 0.5;
 			currentRoom.bg.y = -y * 0.5;

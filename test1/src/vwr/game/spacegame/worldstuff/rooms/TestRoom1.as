@@ -19,30 +19,23 @@ package vwr.game.spacegame.worldstuff.rooms
 			super();
 			
 			bg = new picture();
-			addChild(bg);
-			/*
-			numRows = 20;
-			numCols = 32;
-			tileWidth = 20;
-			tileHeight = 20;
-			*/
+			bg.scaleX = bg.scaleY = 1.25;
+			addChildAt(bg, 0);
+			
 			for (var i:int = 0; i < numRows; ++i)
 			{
 				var row:Array = new Array();
 				for (var j:int = 0; j < numCols; ++j)
 				{
-					var tile:Tile = new Metal();
-					tile.x = j * tileWidth;
-					tile.y = i * tileHeight;
-					row.push(tile);
-					addChild(tile);
-					if (i != 0 && i != numRows - 1)
+					var tile:Tile = null;
+					if (i == 0 || i == numRows - 1 || j == 0 || j == numCols - 1 || (j == 16 && i == 10))
 					{
-						if (j != 0 && j != numCols - 1)
-						{
-							tile.visible = false;
-						}
+						tile = new Metal();
+						tile.x = j * tileWidth;
+						tile.y = i * tileHeight;
+						addChild(tile);
 					}
+					row.push(tile);
 				}
 				tileGrid.push(row);
 			}

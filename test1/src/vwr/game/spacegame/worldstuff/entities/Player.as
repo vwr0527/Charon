@@ -16,7 +16,7 @@ package vwr.game.spacegame.worldstuff.entities
 		
 		[Embed(source = "/../../sprite/ship_col.png")]
 		private var picture:Class;
-		private var speed:Number = 1;
+		private var speed:Number = 0.5;
 		
 		public function Player() 
 		{
@@ -28,10 +28,11 @@ package vwr.game.spacegame.worldstuff.entities
 			pic.y = -pic.bitmapData.height / 4;
 			pic.scaleX = 0.5;
 			pic.scaleY = 0.5;
+			pic.alpha = 1.0;
 			addChildAt(pic, 0);
-			hitbox.visible = true;
-			hitbox.width = 30;
-			hitbox.height = 30;
+			showhitbox = true;
+			hitwidth = 30;
+			hitheight = 30;
 			noclip = false;
 			
 			friction = 0.95;
@@ -99,8 +100,6 @@ package vwr.game.spacegame.worldstuff.entities
 				if (Input.moveDown() == 1)
 					yvel += speed;
 			}
-			
-			
 			
 			super.Update();
 		}
