@@ -191,11 +191,16 @@ package vwr.game.spacegame.worldstuff
 			var tophit:Boolean = (y - hitheight / 2) > tile.y && (y - hitheight / 2) < tile.y + tile.height;
 			var lefthit:Boolean = (x - hitwidth / 2) > tile.x && (x - hitwidth / 2) < tile.x + tile.width;
 			var righthit:Boolean = (x + hitwidth / 2) > tile.x && (x + hitwidth / 2) < tile.x + tile.width;
-			
+			/*
 			var pbottomhit:Boolean = (py + hitheight / 2) > tile.y + extraPush && (py + hitheight / 2) < tile.y + tile.height - extraPush;
 			var ptophit:Boolean = (py - hitheight / 2) > tile.y + extraPush && (py - hitheight / 2) < tile.y + tile.height - extraPush;
 			var plefthit:Boolean = (px - hitwidth / 2) > tile.x + extraPush && (px - hitwidth / 2) < tile.x + tile.width - extraPush;
 			var prighthit:Boolean = (px + hitwidth / 2) > tile.x + extraPush && (px + hitwidth / 2) < tile.x + tile.width - extraPush;
+			*/
+			var pbottomhit:Boolean = (py + hitheight / 2) > tile.y && (py + hitheight / 2) < tile.y + tile.height;
+			var ptophit:Boolean = (py - hitheight / 2) > tile.y && (py - hitheight / 2) < tile.y + tile.height;
+			var plefthit:Boolean = (px - hitwidth / 2) > tile.x && (px - hitwidth / 2) < tile.x + tile.width;
+			var prighthit:Boolean = (px + hitwidth / 2) > tile.x && (px + hitwidth / 2) < tile.x + tile.width;
 			
 			var on_leftwall:Boolean = Math.abs((px + hitwidth / 2) - (tile.x - extraPush)) < 0.01 || Math.abs((x + hitwidth / 2) - (tile.x - extraPush)) < 0.01;
 			var on_rightwall:Boolean = Math.abs((px - hitwidth / 2) - (tile.x + tile.width + extraPush)) < 0.01 || Math.abs((x - hitwidth / 2) - (tile.x + tile.width + extraPush)) < 0.01;
@@ -204,21 +209,27 @@ package vwr.game.spacegame.worldstuff
 			
 			if (bottomhit && righthit && !pbottomhit && !prighthit && !on_topwall && !on_leftwall && dx > 0 && dy > 0)
 			{
+				trace("PONG");
 				DoCornerBounce(x + (hitwidth / 2), y + (hitheight / 2), tile.x, tile.y);
 			}
 			else
 			if (bottomhit && lefthit && !pbottomhit && !plefthit && !on_topwall && !on_rightwall && dx < 0 && dy > 0)
 			{
+				trace("ping");
 				DoCornerBounce(x - (hitwidth / 2), y + (hitheight / 2), tile.x + tile.width, tile.y);
 			}
 			else
 			if (tophit && righthit && !ptophit && !prighthit && !on_bottomwall && !on_leftwall && dx > 0 && dy < 0)
 			{
+				trace("BANG");
+				//prighthit = (px + hitwidth / 2) > tile.x + extraPush && (px + hitwidth / 2) < tile.x + tile.width - extraPush;
+				trace((px + hitwidth / 2) +">"+ (tile.x + extraPush) +"&&"+ (px + hitwidth / 2) +"<"+ (tile.x + tile.width - extraPush));
 				DoCornerBounce(x + (hitwidth / 2), y - (hitheight / 2), tile.x, tile.y + tile.height);
 			}
 			else
 			if (tophit && lefthit && !ptophit && !plefthit && !on_bottomwall && !on_rightwall && dx < 0 && dy < 0)
 			{
+				trace("bong");
 				DoCornerBounce(x - (hitwidth / 2), y - (hitheight / 2), tile.x + tile.width, tile.y + tile.height);
 			}
 			else
@@ -249,6 +260,7 @@ package vwr.game.spacegame.worldstuff
 		
 		private function DoCornerBounce(entityCornerX:Number, entityCornerY:Number, tileCornerX:Number, tileCornerY:Number):void 
 		{
+			trace("corner");
 			// if entityCornerX exceeds tileCornerX
 			// and entCornerY exceeds tileCornerY
 				//figure out if the cornerpoint crossed the vertical or horizontal
@@ -268,10 +280,12 @@ package vwr.game.spacegame.worldstuff
 				if (dy > 0)
 				{
 					BounceX(tileCornerX - entityCornerX);
+					trace("a");
 				}
 				else
 				{
 					BounceY(tileCornerY - entityCornerY);
+					trace("b");
 				}
 			}
 			else
@@ -279,10 +293,12 @@ package vwr.game.spacegame.worldstuff
 				if (dy > 0)
 				{
 					BounceY(tileCornerY - entityCornerY);
+					trace("c");
 				}
 				else
 				{
 					BounceX(tileCornerX - entityCornerX);
+					trace("d");
 				}
 			}
 		}

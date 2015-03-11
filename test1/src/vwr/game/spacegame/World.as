@@ -16,6 +16,7 @@ package vwr.game.spacegame
 	{
 		private var sequenceNumber:Number;
 		private var player:Player;
+		private var enemy:Enemy;
 		private var camera:Camera;
 		private var cursor:Cursor;
 		private var followPoint:Point;
@@ -35,7 +36,7 @@ package vwr.game.spacegame
 			sequenceNumber = 0;
 			
 			roomList = new Array();
-			currentRoom = new TestRoom4();
+			currentRoom = new TestRoom3();
 			cursor = new Cursor();
 			roomList.push(currentRoom);
 			addChild(currentRoom);
@@ -57,6 +58,7 @@ package vwr.game.spacegame
 			activeEntityList.push(camera);
 			player.x = 320;//currentRoom.startx + (currentRoom.roomWidth) / 2;
 			player.y = 200;// currentRoom.starty + (currentRoom.roomHeight) / 2;
+			
 			//player.showhitbox = true;
 			camera.x = player.x;
 			camera.y = player.y;
@@ -76,9 +78,21 @@ package vwr.game.spacegame
 				currentRoom.highlightStore.removeChildAt(0);
 			}
 			
+			//spawn pending entities
+			while (currentRoom.numToSpawn > 0)
+			{
+				var toAdd:Entity = currentRoom.SpawnPendingEntity();
+				addChild(toAdd);
+				activeEntityList.push(toAdd);
+			}
+			
 			//update all entities
 			for each(var ent:Entity in activeEntityList)
 			{
+				if (ent is Enemy)
+				{
+					(ent as Enemy).SetTarget(player.x, player.y);
+				}
 				ent.Update();
 				if (ent.noclip == false)
 				{

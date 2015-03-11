@@ -28,6 +28,7 @@ package vwr.game.spacegame.worldstuff
 		public var parralax:Number = 0.5;
 		public var bgScale:Number = 2;
 		public var highlightStore:Sprite;
+		public var numToSpawn:int = 0;
 		
 		public function Room() 
 		{
@@ -74,6 +75,44 @@ package vwr.game.spacegame.worldstuff
 			else if (id == 8) { return new ChromeDiag(2); }
 			else if (id == 9) { return new ChromeDiag(3); }
 			
+			return null;
+		}
+		
+		public function Update():void
+		{
+			this.bg.x = ((Main.gameWidth / 2) - parent.x) * parralax;
+			this.bg.y = ((Main.gameHeight / 2) - parent.y) * parralax;
+			this.bg.scaleX = this.bg.scaleY = bgScale;
+			this.bg.x -= this.bg.width / 2;
+			this.bg.y -= this.bg.height / 2;
+			this.bg.x += (startx + (roomWidth / 2)) * (1 - parralax);
+			this.bg.y += (starty + (roomHeight / 2)) * (1 - parralax);
+			
+			for each (var bgObj:BgObject in bgObjs)
+			{
+				bgObj.Update(parent.x, parent.y);
+			}
+		}
+		
+		public function getIndexAtPosX(posX:Number):int
+		{
+			var index:int = int(Math.floor((posX) / this.tileWidth));
+			if (index < 0) index = 0;
+			if (index > this.numCols - 1) index = this.numCols - 1;
+			return index;
+		}
+		
+		public function getIndexAtPosY(posY:Number):int
+		{
+			var index:int = int(Math.floor((posY) / this.tileHeight));
+			if (index < 0) index = 0;
+			if (index > this.numRows - 1) index = this.numRows - 1;
+			return index;
+		}
+		
+		public function SpawnPendingEntity():Entity
+		{
+			--numToSpawn;
 			return null;
 		}
 		
@@ -137,38 +176,6 @@ package vwr.game.spacegame.worldstuff
 			marker.graphics.endFill();
 			marker.visible = true;
 			highlightStore.addChild(marker);
-		}
-		
-		public function Update():void
-		{
-			this.bg.x = ((Main.gameWidth / 2) - parent.x) * parralax;
-			this.bg.y = ((Main.gameHeight / 2) - parent.y) * parralax;
-			this.bg.scaleX = this.bg.scaleY = bgScale;
-			this.bg.x -= this.bg.width / 2;
-			this.bg.y -= this.bg.height / 2;
-			this.bg.x += (startx + (roomWidth / 2)) * (1 - parralax);
-			this.bg.y += (starty + (roomHeight / 2)) * (1 - parralax);
-			
-			for each (var bgObj:BgObject in bgObjs)
-			{
-				bgObj.Update(parent.x, parent.y);
-			}
-		}
-		
-		public function getIndexAtPosX(posX:Number):int
-		{
-			var index:int = int(Math.floor((posX) / this.tileWidth));
-			if (index < 0) index = 0;
-			if (index > this.numCols - 1) index = this.numCols - 1;
-			return index;
-		}
-		
-		public function getIndexAtPosY(posY:Number):int
-		{
-			var index:int = int(Math.floor((posY) / this.tileHeight));
-			if (index < 0) index = 0;
-			if (index > this.numRows - 1) index = this.numRows - 1;
-			return index;
 		}
 	}
 }

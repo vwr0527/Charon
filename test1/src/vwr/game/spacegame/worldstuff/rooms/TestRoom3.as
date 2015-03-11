@@ -1,6 +1,8 @@
 package vwr.game.spacegame.worldstuff.rooms 
 {
 	import vwr.game.spacegame.worldstuff.BgPlane;
+	import vwr.game.spacegame.worldstuff.entities.Enemy;
+	import vwr.game.spacegame.worldstuff.Entity;
 	import vwr.game.spacegame.worldstuff.Room;
 	import vwr.game.spacegame.worldstuff.Tile;
 	import flash.display.Bitmap;
@@ -147,6 +149,7 @@ package vwr.game.spacegame.worldstuff.rooms
 			
 			ConstructRoom(layout);
 			
+			numToSpawn = 10;
 		}
 		
 		public override function Update():void
@@ -155,6 +158,15 @@ package vwr.game.spacegame.worldstuff.rooms
 			bgObjs[0].rotation += 0.1;
 		}
 		
+		public override function SpawnPendingEntity():Entity
+		{
+			var badguy:Enemy = new Enemy();
+			badguy.xvel = Math.random() * 10;
+			badguy.yvel = Math.random() * 10;
+			
+			super.SpawnPendingEntity();
+			return badguy;
+		}
 	}
 
 }

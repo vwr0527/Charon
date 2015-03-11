@@ -25,10 +25,10 @@ package vwr.game.spacegame.worldstuff.entities
 			var pic:Bitmap = new picture();
 			pic.smoothing = true;
 			pic.bitmapData.threshold(pic.bitmapData, pic.bitmapData.rect, new Point(0, 0), "==", 0xffff00ff);
-			pic.x = -pic.bitmapData.width / 4;
-			pic.y = -pic.bitmapData.height / 4;
 			pic.scaleX = 0.5;
 			pic.scaleY = 0.5;
+			pic.x = -pic.bitmapData.width / 4;
+			pic.y = -pic.bitmapData.height / 4;
 			pic.alpha = 1.0;
 			addChildAt(pic, 0);
 			//showhitbox = true;
