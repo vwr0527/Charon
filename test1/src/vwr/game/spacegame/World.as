@@ -96,10 +96,11 @@ package vwr.game.spacegame
 				enemyShotList.push(redshot);
 				addChild(redshot);
 				activeEntityList.push(redshot);
+				
 				var droneshot:Shot = new SlowRedLaser();
+				enemyShotList.push(droneshot);
 				addChild(droneshot);
 				activeEntityList.push(droneshot);
-				enemyShotList.push(droneshot);
 			}
 		}
 		
@@ -179,7 +180,7 @@ package vwr.game.spacegame
 			
 			player.HandleShooting(ShootLaser, cursor.x, cursor.y);
 			
-			camera.LearnPositions(player.x, player.y, cursor.x, cursor.y);
+			camera.ReceivePositions(player.x, player.y, cursor.x, cursor.y);
 			scaleX = scaleY = camera.zoom;
 			x = (Main.gameWidth / 2) - (camera.x * camera.zoom);
 			y = (Main.gameHeight / 2) - (camera.y * camera.zoom);

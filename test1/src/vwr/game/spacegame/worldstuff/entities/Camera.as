@@ -33,7 +33,7 @@ package vwr.game.spacegame.worldstuff.entities
 			y = Math.round(y);
 		}
 		
-		public function LearnPositions(playerX:Number, playerY:Number, cursorX:Number, cursorY:Number):void
+		public function ReceivePositions(playerX:Number, playerY:Number, cursorX:Number, cursorY:Number):void
 		{
 			followPoint.x = (cursorX + (playerX * 2)) / 3;
 			followPoint.y = (cursorY + (playerY * 2)) / 3;

@@ -45,3 +45,6 @@ Temporary Items
 # big pictures that I'm currently working on
 /gimp
 /space
+
+# don't include archive files
+/arch
