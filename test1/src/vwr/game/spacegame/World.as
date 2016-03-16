@@ -44,7 +44,7 @@ package vwr.game.spacegame
 			sequenceNumber = 0;
 			
 			roomList = new Array();
-			currentRoom = new TestRoom3();
+			currentRoom = new TestRoom3();//        <----------  Level the game starts on
 			cursor = new Cursor();
 			roomList.push(currentRoom);
 			addChild(currentRoom);
@@ -92,10 +92,10 @@ package vwr.game.spacegame
 			enemyShotList = new Array();
 			for (i = 0; i < 100; ++i)
 			{
-				var redshot:Shot = new Plasma();//TODO: Different types of enemy shots
-				enemyShotList.push(redshot);
-				addChild(redshot);
-				activeEntityList.push(redshot);
+				var greenshot:Shot = new Plasma();//TODO: Different types of enemy shots
+				enemyShotList.push(greenshot);
+				addChild(greenshot);
+				activeEntityList.push(greenshot);
 				
 				var droneshot:Shot = new SlowRedLaser();
 				enemyShotList.push(droneshot);
@@ -103,12 +103,6 @@ package vwr.game.spacegame
 				activeEntityList.push(droneshot);
 			}
 		}
-		
-		// DIFFERENT TYPES DILLEMA
-		// does each different type need it's own list?
-		// how can we combine different types of ents into one list?
-		// IDEAL SPAWNING FCN:
-		//    Spawn( "what thing", "thing's props" );
 		
 		public function Update():void
 		{
@@ -166,6 +160,8 @@ package vwr.game.spacegame
 					}
 				}
 			}
+			
+			//enemy shots check if hit player
 			for each(var eshot:Shot in enemyShotList)
 			{
 				if (!eshot.IsActive()) continue;

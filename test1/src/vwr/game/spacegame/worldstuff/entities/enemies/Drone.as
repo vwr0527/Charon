@@ -239,8 +239,7 @@ package vwr.game.spacegame.worldstuff.entities.enemies
 			if (ai_shootreload <= 0 && ai_shootready)
 			{
 				ai_shootreload = 30 + (Math.random() * 30);
-				var SHOT_TYPE:int = 2;
-				shootLaserFunc(x + Math.sin(rotRad) * 15, y - Math.cos(rotRad) * 15, rotation, SHOT_TYPE);
+				shootLaserFunc(x + Math.sin(rotRad) * 15, y - Math.cos(rotRad) * 15, rotation, 3);
 			}
 		}
 		

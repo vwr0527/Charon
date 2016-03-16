@@ -33,7 +33,7 @@ package vwr.game.spacegame.worldstuff.entities.shots
 		
 		public override function GetType():int
 		{
-			return 2;
+			return 3;
 		}
 	}
 }

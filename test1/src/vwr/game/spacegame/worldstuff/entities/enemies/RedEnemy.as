@@ -255,8 +255,7 @@ package vwr.game.spacegame.worldstuff.entities.enemies
 				var realShotOriginY:Number = y + realShotOffsetY;
 				
 				ai_shootreload = 25 + (Math.random() * 15);
-				var SHOT_TYPE:int = 1;
-				shootLaserFunc(realShotOriginX, realShotOriginY, rotation, SHOT_TYPE);
+				shootLaserFunc(realShotOriginX, realShotOriginY, rotation, 2);
 			}
 		}
 		
