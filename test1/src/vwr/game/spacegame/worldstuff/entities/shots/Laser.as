@@ -482,7 +482,7 @@ package vwr.game.spacegame.worldstuff.entities.shots
 		
 		public override function IsActive():Boolean
 		{
-			return impact == 0;
+			return impact != 5;
 		}
 		
 		public override function GetDamage():Number

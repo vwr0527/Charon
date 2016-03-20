@@ -121,5 +121,10 @@ package vwr.game.spacegame.worldstuff.entities.explosions
 			}
 			return false;
 		}
+		
+		public function IsActive():Boolean
+		{
+			return counter > 0;
+		}
 	}
 }

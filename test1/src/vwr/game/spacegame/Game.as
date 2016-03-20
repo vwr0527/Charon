@@ -30,14 +30,11 @@ package vwr.game.spacegame
 			addChild(input);
         }
 		
-
         public function Update(event:Event):void
 		{
 			input.Update();
 			world.Update();
 			menu.Update();
         }
-		
 	}
-
 }

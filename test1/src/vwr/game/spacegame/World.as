@@ -138,6 +138,11 @@ package vwr.game.spacegame
 			
 			for each(var expl:Explosion in explosionList)
 			{
+				if (!expl.IsActive() && expl.parent != null)
+				{
+					removeChild(expl);
+					continue;
+				}
 				expl.Update();
 			}
 			
@@ -169,59 +174,52 @@ package vwr.game.spacegame
 		
 		private function ShootLaser(xpos:Number, ypos:Number, dir:Number):void
 		{
-			for (var i:int = 0; i < shotList.length; ++i)
-			{
-				if ((shotList[i] as Shot).Shoot(xpos,ypos,dir))
-				{
-					(shotList[i] as Shot).Update();
-					(shotList[i] as Shot).CollideTiles(currentRoom);
-					break;
-				}
-			}
-			//must have failed to find any empty player shots
-			var newshot:Shot = new Laser();
-			entityList.push(newshot);
-			addChild(newshot);
-			shotList.push(newshot);
-			
-			newshot.Shoot(xpos, ypos, dir);
-			newshot.Update();
-			newshot.CollideTiles(currentRoom);
+			CreateShotHelper(xpos, ypos, dir, 1, shotList);
 		}
 		
 		private function ShootEnemyLaser(xpos:Number, ypos:Number, dir:Number, type:int):void
 		{
-			for (var i:int = 0; i < enemyShotList.length; ++i)
+			CreateShotHelper(xpos, ypos, dir, type, enemyShotList);
+		}
+		
+		private function CreateShotHelper(xpos:Number, ypos:Number, dir:Number, type:int, whichArray:Array):void
+		{
+			for (var i:int = 0; i < whichArray.length; ++i)
 			{
-				if ((enemyShotList[i] as Shot).GetType() != type) continue;
-				if ((enemyShotList[i] as Shot).Shoot(xpos,ypos,dir))
+				if ((whichArray[i] as Shot).GetType() != type) continue;
+				if ((whichArray[i] as Shot).Shoot(xpos,ypos,dir))
 				{
-					(enemyShotList[i] as Shot).Update();
-					(enemyShotList[i] as Shot).CollideTiles(currentRoom);
+					
+					(whichArray[i] as Shot).Update();
+					(whichArray[i] as Shot).CollideTiles(currentRoom);
+					addChild((whichArray[i] as Shot));
 					return;
 				}
 			}
 			//must have failed to find any empty enemy lasers
-			var newEnmShot:Shot;
+			var newShot:Shot;
 			switch (type)
 			{
+				case 1:
+					newShot = new Laser();
+					break;
 				case 2:
-					newEnmShot = new Plasma();
+					newShot = new Plasma();
 					break;
 				case 3:
-					newEnmShot = new SlowRedLaser();
+					newShot = new SlowRedLaser();
 					break;
 				default:
-					trace("error, no such enemy shot type");
+					trace("error, no such shot type");
 					return;
 			}
-			enemyShotList.push(newEnmShot);
-			addChild(newEnmShot);
-			entityList.push(newEnmShot);
+			whichArray.push(newShot);
+			addChild(newShot);
+			entityList.push(newShot);
 			
-			newEnmShot.Shoot(xpos, ypos, dir);
-			newEnmShot.Update();
-			newEnmShot.CollideTiles(currentRoom);
+			newShot.Shoot(xpos, ypos, dir);
+			newShot.Update();
+			newShot.CollideTiles(currentRoom);
 		}
 		
 		private function CreateExplosion(x:Number, y:Number, size:int):void
@@ -231,6 +229,7 @@ package vwr.game.spacegame
 				if (explosionList[i].ExplodeAt(x, y))
 				{
 					explosionList[i].SetExplosionSize(size);
+					addChild(explosionList[i]);
 					return;
 				}
 			}
