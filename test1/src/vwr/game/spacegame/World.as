@@ -38,24 +38,24 @@ package vwr.game.spacegame
 		private var minx:Number;
 		private var miny:Number;
 		
+		private var roomNum:int = 2;
+		
 		public function World() 
 		{
 			super();
 			sequenceNumber = 0;
 			
 			roomList = new Array();
-			currentRoom = new TestRoom3();//        <----------  Level the game starts on
+			LoadAllRooms();
+			
 			cursor = new Cursor();
-			roomList.push(currentRoom);
-			addChild(currentRoom);
 			addChild(cursor);
 			
-			maxx = currentRoom.startx + currentRoom.roomWidth;
-			maxy = currentRoom.starty + currentRoom.roomHeight;
-			minx = currentRoom.startx;
-			miny = currentRoom.starty;
-			
 			entityList = new Array();
+			shotList = new Array();
+			enemyList = new Array();
+			explosionList = new Array();
+			enemyShotList = new Array();
 			
 			player = new Player();
 			camera = new Camera();
@@ -63,21 +63,39 @@ package vwr.game.spacegame
 			addChild(camera);			
 			entityList.push(player);
 			entityList.push(camera);
-			player.x = currentRoom.startx + (currentRoom.roomWidth) / 2;
-			player.y = currentRoom.starty + (currentRoom.roomHeight) / 2;
 			
-			//player.showhitbox = true;
+			LoadRoom(2);
+			
+			if (currentRoom != null)
+			{
+				player.x = currentRoom.startx + (currentRoom.roomWidth) / 2;
+				player.y = currentRoom.starty + (currentRoom.roomHeight) / 2;
+			}
 			camera.x = player.x;
 			camera.y = player.y;
-			
-			shotList = new Array();
-			enemyList = new Array();
-			explosionList = new Array();
-			enemyShotList = new Array();
 		}
 		
 		public function Update():void
 		{
+			if (Input.upArrow() == 2)
+			{
+				++roomNum;
+				if (roomNum > 3)
+				{
+					roomNum = 0;
+				}
+				LoadRoom(roomNum);
+			}
+			if (Input.downArrow() == 2)
+			{
+				--roomNum;
+				if (roomNum < 0)
+				{
+					roomNum = 3;
+				}
+				LoadRoom(roomNum);
+			}
+			
 			++sequenceNumber;
 			
 			currentRoom.ResetHighlight();
@@ -102,7 +120,6 @@ package vwr.game.spacegame
 				ent.Update();
 				if (ent.noclip == false)
 				{
-					//TODO: Collide with other ents
 					ent.Confine(minx, miny, maxx, maxy);
 					ent.CollideTiles(currentRoom);
 				}
@@ -115,13 +132,13 @@ package vwr.game.spacegame
 				
 				for each(enemy in enemyList)
 				{
+					if (!enemy.IsActive()) continue;
 					if (shot.HitEnt(enemy))
 					{
 						enemy.GetHit(shot);
 						if (!enemy.IsActive())
 						{
 							enemy.Explode(CreateExplosion);
-							enemy.Respawn();
 						}
 						break;
 					}
@@ -172,6 +189,30 @@ package vwr.game.spacegame
 			currentRoom.Update();
 		}
 		
+		private function LoadAllRooms():void
+		{
+			roomList.push(new TestRoom1());
+			roomList.push(new TestRoom2());
+			roomList.push(new TestRoom3());
+			roomList.push(new TestRoom4());
+		}
+		
+		private function LoadRoom(roomId:int):void
+		{
+			if (currentRoom != null && currentRoom.parent != null)
+			{
+				removeChild(currentRoom);
+			}
+			
+			currentRoom = roomList[roomId];
+			maxx = currentRoom.startx + currentRoom.roomWidth;
+			maxy = currentRoom.starty + currentRoom.roomHeight;
+			minx = currentRoom.startx;
+			miny = currentRoom.starty;
+			
+			addChildAt(currentRoom, 0);
+		}
+		
 		private function ShootLaser(xpos:Number, ypos:Number, dir:Number):void
 		{
 			CreateShotHelper(xpos, ypos, dir, 1, shotList);
@@ -196,7 +237,7 @@ package vwr.game.spacegame
 					return;
 				}
 			}
-			//must have failed to find any empty enemy lasers
+			//must have failed to find any empty shots
 			var newShot:Shot;
 			switch (type)
 			{

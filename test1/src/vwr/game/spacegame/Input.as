@@ -117,6 +117,14 @@ package vwr.game.spacegame
 		{
 			return mouseDown;
 		}
+		public static function upArrow():int
+		{
+			return keyDown[38];
+		}
+		public static function downArrow():int
+		{
+			return keyDown[40];
+		}
 	}
 
 }

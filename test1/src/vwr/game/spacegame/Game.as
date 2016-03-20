@@ -32,9 +32,9 @@ package vwr.game.spacegame
 		
         public function Update(event:Event):void
 		{
-			input.Update();
 			world.Update();
 			menu.Update();
+			input.Update();
         }
 	}
 }
