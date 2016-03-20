@@ -25,6 +25,7 @@ package vwr.game.spacegame.worldstuff
 		public var showhitbox:Boolean = false;
 		private static const extraPush:Number = 0.1;
 		protected var enableHighlightTiles:Boolean = false;
+		protected var active:Boolean = true;
 		
 		public function Entity() 
 		{
@@ -61,6 +62,11 @@ package vwr.game.spacegame.worldstuff
 				hitboxGraphic.height = hitheight;
 				hitboxGraphic.rotation = -rotation;
 			}
+		}
+		
+		public function IsActive():Boolean
+		{
+			return active;
 		}
 		
 		public function Confine(minx:Number, miny:Number, maxx:Number, maxy:Number):void
@@ -325,6 +331,7 @@ package vwr.game.spacegame.worldstuff
 				}
 			}
 		}
+		
 		protected function BounceY(pushOut:Number):void 
 		{
 			y = y + pushOut;

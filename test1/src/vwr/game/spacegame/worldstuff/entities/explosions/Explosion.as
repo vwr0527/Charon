@@ -37,7 +37,6 @@ package vwr.game.spacegame.worldstuff.entities.explosions
 			med.x -= med.width / 2;
 			med.y -= med.height / 2;
 			medc = new Sprite();
-			addChild(medc);
 			medc.addChild(med);
 			
 			bang = new mediumexplodepic();
@@ -45,7 +44,6 @@ package vwr.game.spacegame.worldstuff.entities.explosions
 			bang.x -= bang.width / 2;
 			bang.y -= bang.height / 2;
 			bangc = new Sprite();
-			addChild(bangc);
 			bangc.addChild(bang);
 			
 			dark = new mediumexplodepic();
@@ -53,8 +51,11 @@ package vwr.game.spacegame.worldstuff.entities.explosions
 			dark.x -= dark.width / 2;
 			dark.y -= dark.height / 2;
 			darkc = new Sprite();
-			addChildAt(darkc, 0);
 			darkc.addChild(dark);
+			
+			addChild(darkc);
+			addChild(medc);
+			addChild(bangc);
 			
 			speed = 0.7;
 			scaleX = 1.8;
@@ -121,5 +122,4 @@ package vwr.game.spacegame.worldstuff.entities.explosions
 			return false;
 		}
 	}
-
 }

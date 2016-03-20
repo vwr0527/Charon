@@ -41,7 +41,6 @@ package vwr.game.spacegame.worldstuff.entities.enemies
 		private var ai_stunned:int = 0;
 		private var ai_shootreload:int = 0;
 		private var ai_shootready:Boolean = false;
-		private var active:Boolean = true;
 		private const fullhealth:Number = 20.0;
 		private var health:Number = fullhealth;
 		
@@ -257,11 +256,6 @@ package vwr.game.spacegame.worldstuff.entities.enemies
 				ai_shootreload = 25 + (Math.random() * 15);
 				shootLaserFunc(realShotOriginX, realShotOriginY, rotation, 2);
 			}
-		}
-		
-		public override function IsDead():Boolean
-		{
-			return !active;
 		}
 		
 		public override function Explode(createExplosionFunc:Function):void

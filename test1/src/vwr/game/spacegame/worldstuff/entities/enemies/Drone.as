@@ -40,7 +40,6 @@ package vwr.game.spacegame.worldstuff.entities.enemies
 		private var ai_stunned:int = 0;
 		private var ai_shootreload:int = 0;
 		private var ai_shootready:Boolean = false;
-		private var active:Boolean = true;
 		private var health:Number = 10.0;
 		
 		public function Drone() 
@@ -241,11 +240,6 @@ package vwr.game.spacegame.worldstuff.entities.enemies
 				ai_shootreload = 30 + (Math.random() * 30);
 				shootLaserFunc(x + Math.sin(rotRad) * 15, y - Math.cos(rotRad) * 15, rotation, 3);
 			}
-		}
-		
-		public override function IsDead():Boolean
-		{
-			return !active;
 		}
 		
 		public override function Explode(createExplosionFunc:Function):void

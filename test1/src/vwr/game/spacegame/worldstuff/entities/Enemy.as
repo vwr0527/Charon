@@ -48,11 +48,6 @@ package vwr.game.spacegame.worldstuff.entities
 		{
 		}
 		
-		public function IsDead():Boolean
-		{
-			return true;
-		}
-		
 		public function Explode(createExplosionFunc:Function):void
 		{
 		}

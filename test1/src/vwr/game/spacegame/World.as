@@ -26,7 +26,7 @@ package vwr.game.spacegame
 		private var followPoint:Point;
 		private var currentRoom:Room;
 		private var roomList:Array;
-		private var activeEntityList:Array;
+		private var entityList:Array;
 		private var tilesTouching:Array;
 		private var shotList:Array;
 		private var enemyShotList:Array;
@@ -55,14 +55,14 @@ package vwr.game.spacegame
 			minx = currentRoom.startx;
 			miny = currentRoom.starty;
 			
-			activeEntityList = new Array();
+			entityList = new Array();
+			
 			player = new Player();
-
 			camera = new Camera();
 			addChild(player);
-			addChild(camera);
-			activeEntityList.push(player);
-			activeEntityList.push(camera);
+			addChild(camera);			
+			entityList.push(player);
+			entityList.push(camera);
 			player.x = currentRoom.startx + (currentRoom.roomWidth) / 2;
 			player.y = currentRoom.starty + (currentRoom.roomHeight) / 2;
 			
@@ -71,37 +71,9 @@ package vwr.game.spacegame
 			camera.y = player.y;
 			
 			shotList = new Array();
-			for (var i:int = 0; i < 50; ++i)
-			{
-				var newshot:Shot = new Laser();
-				activeEntityList.push(newshot);
-				addChild(newshot);
-				shotList.push(newshot);
-			}
-			
 			enemyList = new Array();
 			explosionList = new Array();
-			
-			for (i = 0; i < 20; ++i)
-			{
-				var newexplosion:Explosion = new Explosion();
-				explosionList.push(newexplosion);
-				addChild(newexplosion);
-			}
-			
 			enemyShotList = new Array();
-			for (i = 0; i < 100; ++i)
-			{
-				var greenshot:Shot = new Plasma();//TODO: Different types of enemy shots
-				enemyShotList.push(greenshot);
-				addChild(greenshot);
-				activeEntityList.push(greenshot);
-				
-				var droneshot:Shot = new SlowRedLaser();
-				enemyShotList.push(droneshot);
-				addChild(droneshot);
-				activeEntityList.push(droneshot);
-			}
 		}
 		
 		public function Update():void
@@ -115,26 +87,24 @@ package vwr.game.spacegame
 			{
 				var toAdd:Entity = currentRoom.SpawnPendingEntity();
 				addChild(toAdd);
-				activeEntityList.push(toAdd);
+				entityList.push(toAdd);
 				if (toAdd is Enemy) enemyList.push(toAdd);
 			}
 			
 			//update all entities
-			for each(var ent:Entity in activeEntityList)
+			for each(var ent:Entity in entityList)
 			{
+				if (!ent.IsActive())
+				{
+					if (ent.parent != null) removeChild(ent);
+					continue;
+				}
 				ent.Update();
 				if (ent.noclip == false)
 				{
-					//Collider with other ents
-					//==nothing here yet==
-					//Confine to room
+					//TODO: Collide with other ents
 					ent.Confine(minx, miny, maxx, maxy);
 					ent.CollideTiles(currentRoom);
-				}
-				if (ent is Enemy)
-				{
-					(ent as Enemy).SetTarget(player.x, player.y);
-					(ent as Enemy).HandleShooting(ShootEnemyLaser);
 				}
 			}
 			
@@ -143,20 +113,17 @@ package vwr.game.spacegame
 			{
 				if (!shot.IsActive()) continue;
 				
-				var closestEnemy:Enemy = null;
-				
-				for each(var enm:Enemy in enemyList)
+				for each(enemy in enemyList)
 				{
-					if (shot.HitEnt(enm)) closestEnemy = enm;
-				}
-				
-				if (closestEnemy != null)
-				{
-					closestEnemy.GetHit(shot);
-					if (closestEnemy.IsDead())
+					if (shot.HitEnt(enemy))
 					{
-						closestEnemy.Explode(CreateExplosion);
-						closestEnemy.Respawn();
+						enemy.GetHit(shot);
+						if (!enemy.IsActive())
+						{
+							enemy.Explode(CreateExplosion);
+							enemy.Respawn();
+						}
+						break;
 					}
 				}
 			}
@@ -172,6 +139,15 @@ package vwr.game.spacegame
 			for each(var expl:Explosion in explosionList)
 			{
 				expl.Update();
+			}
+			
+			for each(var enemy:Enemy in enemyList)
+			{
+				if (enemy.IsActive())
+				{
+					enemy.SetTarget(player.x, player.y);
+					enemy.HandleShooting(ShootEnemyLaser);
+				}
 			}
 			
 			player.HandleShooting(ShootLaser, cursor.x, cursor.y);
@@ -202,6 +178,15 @@ package vwr.game.spacegame
 					break;
 				}
 			}
+			//must have failed to find any empty player shots
+			var newshot:Shot = new Laser();
+			entityList.push(newshot);
+			addChild(newshot);
+			shotList.push(newshot);
+			
+			newshot.Shoot(xpos, ypos, dir);
+			newshot.Update();
+			newshot.CollideTiles(currentRoom);
 		}
 		
 		private function ShootEnemyLaser(xpos:Number, ypos:Number, dir:Number, type:int):void
@@ -213,9 +198,30 @@ package vwr.game.spacegame
 				{
 					(enemyShotList[i] as Shot).Update();
 					(enemyShotList[i] as Shot).CollideTiles(currentRoom);
-					break;
+					return;
 				}
 			}
+			//must have failed to find any empty enemy lasers
+			var newEnmShot:Shot;
+			switch (type)
+			{
+				case 2:
+					newEnmShot = new Plasma();
+					break;
+				case 3:
+					newEnmShot = new SlowRedLaser();
+					break;
+				default:
+					trace("error, no such enemy shot type");
+					return;
+			}
+			enemyShotList.push(newEnmShot);
+			addChild(newEnmShot);
+			entityList.push(newEnmShot);
+			
+			newEnmShot.Shoot(xpos, ypos, dir);
+			newEnmShot.Update();
+			newEnmShot.CollideTiles(currentRoom);
 		}
 		
 		private function CreateExplosion(x:Number, y:Number, size:int):void
@@ -225,9 +231,16 @@ package vwr.game.spacegame
 				if (explosionList[i].ExplodeAt(x, y))
 				{
 					explosionList[i].SetExplosionSize(size);
-					break;
+					return;
 				}
 			}
+			//must have failed to find any empty explosions			
+			var newexplosion:Explosion = new Explosion();
+			addChild(newexplosion);
+			explosionList.push(newexplosion);
+			
+			newexplosion.ExplodeAt(x, y);
+			newexplosion.SetExplosionSize(size);
 		}
 	}
 }

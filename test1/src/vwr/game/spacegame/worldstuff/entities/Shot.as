@@ -71,11 +71,6 @@ package vwr.game.spacegame.worldstuff.entities
 			return false;
 		}
 		
-		public function IsActive():Boolean
-		{
-			return false;
-		}
-		
 		public function GetDamage():Number
 		{
 			return 0;
