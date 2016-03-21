@@ -6,23 +6,32 @@ package vwr.game.spacegame.worldstuff
 	 */
 	public class DiagTile extends Tile 
 	{
+		/*
+		 * dir = 0
+		 * __
+		 * |/
+		 * 
+		 * dir = 1
+		 * __
+		 * \|
+		 * 
+		 * dir = 2
+		 * 
+		 * /|
+		 * --
+		 * 
+		 * dir = 3
+		 * 
+		 * |\
+		 * --
+		 * 
+		 */
 		public var dir:int = 0;
 		public function DiagTile(direction:int) 
 		{
+			if (direction > 3) direction = 3;
+			if (direction < 0) direction = 0;
 			dir = direction;
-			if (direction == 0)
-			{
-			}
-			else if (direction == 1)
-			{
-			}
-			else if (direction == 2)
-			{
-			}
-			else
-			{
-				dir = 3;
-			}
 		}
 		
 	}

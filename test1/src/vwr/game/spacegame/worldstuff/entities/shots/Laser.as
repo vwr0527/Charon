@@ -5,6 +5,7 @@ package vwr.game.spacegame.worldstuff.entities.shots
 	import flash.display.DisplayObject;
 	import flash.geom.ColorTransform;
 	import flash.geom.Point;
+	import vwr.game.spacegame.worldstuff.DiagTile;
 	import vwr.game.spacegame.worldstuff.entities.Shot;
 	import vwr.game.spacegame.worldstuff.Entity;
 	import vwr.game.spacegame.Input;
@@ -200,11 +201,11 @@ package vwr.game.spacegame.worldstuff.entities.shots
 			{
 				return;
 			}
-			/*if (tile is DiagTile)
+			if (tile is DiagTile)
 			{
 				HitDiagTile(tile as DiagTile);
 				return;
-			}*/
+			}
 			
 			HitSquare(tile.x, tile.y, tile.x + tile.width, tile.y + tile.height);
 		}
@@ -375,6 +376,248 @@ package vwr.game.spacegame.worldstuff.entities.shots
 			DoHit();
 		}
 		
+		
+		protected override function HitDiagTile(tile:DiagTile):void 
+		{
+			var xmin:Number = tile.x;
+			var ymin:Number = tile.y;
+			var xmax:Number = tile.x + tile.width;
+			var ymax:Number = tile.y + tile.height;
+			
+			if (tile.dir == 1)
+			{
+				// __
+				// \|
+				
+				if (yvel > 0)
+				{
+					var xatwall:Number = (ymin - intercept) / slope;
+					if (y > ymin && (xatwall > xmin && xatwall < xmax))
+					{
+						if (py < ymin)
+						{
+							x = xatwall;
+							y = ymin;
+							DoHit();
+							return;
+						}
+						else if ((px - py) > (xmin - ymin))
+						{
+							DoHit();
+							return;
+						}
+					}
+				}
+				if (xvel < 0)
+				{
+					var yatwall:Number = (slope * xmax) + intercept;
+					if (x < xmax && (yatwall > ymin && yatwall < ymax))
+					{
+						if (px > xmax)
+						{
+							x = xmax;
+							y = yatwall;
+							DoHit();
+							return;
+						}
+						else if ((px - py) > (xmin - ymin))
+						{
+							DoHit();
+							return;
+						}
+					}
+				}
+				if (line_line(px, x, xmin, xmax, py, y, ymin, ymax))
+				{
+					if ((x - y) > (x_intersect - y_intersect))
+					{
+						x = x_intersect;
+						y = y_intersect;
+						if (x > xmax) x = xmax;
+						if (x < xmin) x = xmin;
+						if (y > ymax) y = ymax;
+						if (y < ymin) y = ymin;
+						DoHit();
+						return;
+					}
+				}
+			}
+			else if (tile.dir == 0)
+			{
+				// __
+				// |/
+				
+				if (yvel > 0)
+				{
+					xatwall = (ymin - intercept) / slope;
+					if (y > ymin && (xatwall > xmin && xatwall < xmax))
+					{
+						if (py < ymin)
+						{
+							x = xatwall;
+							y = ymin;
+							DoHit();
+							return;
+						}
+						else if ((px + py) < (xmin + ymax))
+						{
+							DoHit();
+							return;
+						}
+					}
+				}
+				if (xvel > 0)
+				{
+					yatwall = (slope * xmin) + intercept;
+					if (x > xmin && (yatwall > ymin && yatwall < ymax))
+					{
+						if (px < ymin)
+						{
+							x = xmin;
+							y = yatwall;
+							DoHit();
+							return;
+						}
+						else if ((px + py) < (xmin + ymax))
+						{
+							DoHit();
+							return;
+						}
+					}
+				}
+				if (line_line(px, x, xmin, xmax, py, y, ymax, ymin))
+				{
+					if ((x + y) < (x_intersect + y_intersect))
+					{
+						x = x_intersect;
+						y = y_intersect;
+						if (x > xmax) x = xmax;
+						if (x < xmin) x = xmin;
+						if (y > ymax) y = ymax;
+						if (y < ymin) y = ymin;
+						DoHit();
+						return;
+					}
+				}
+			}
+			else if (tile.dir == 3)
+			{
+				// |\
+				// --
+				
+				if (yvel < 0)
+				{
+					xatwall = (ymax - intercept) / slope;
+					if (y < ymax && (xatwall > xmin && xatwall < xmax))
+					{
+						if (py > ymax)
+						{
+							x = xatwall;
+							y = ymax;
+							DoHit();
+							return;
+						}
+						else if ((px - py) < (xmin - ymin))
+						{
+							DoHit();
+							return;
+						}
+					}
+				}
+				if (xvel > 0)
+				{
+					yatwall = (slope * xmin) + intercept;
+					if (x > xmin && (yatwall > ymin && yatwall < ymax))
+					{
+						if (px < xmin)
+						{
+							x = xmin;
+							y = yatwall;
+							DoHit();
+							return;
+						}
+						else if ((px - py) < (xmin - ymin))
+						{
+							DoHit();
+							return;
+						}
+					}
+				}
+				if (line_line(px, x, xmin, xmax, py, y, ymin, ymax))
+				{
+					if ((x - y) < (x_intersect - y_intersect))
+					{
+						x = x_intersect;
+						y = y_intersect;
+						if (x > xmax) x = xmax;
+						if (x < xmin) x = xmin;
+						if (y > ymax) y = ymax;
+						if (y < ymin) y = ymin;
+						DoHit();
+						return;
+					}
+				}
+			}
+			else if (tile.dir == 2)
+			{
+				// /|
+				// --
+				
+				if (yvel < 0)
+				{
+					xatwall = (ymax - intercept) / slope;
+					if (y < ymax && (xatwall > xmin && xatwall < xmax))
+					{
+						if (py > ymax)
+						{
+							x = xatwall;
+							y = ymax;
+							DoHit();
+							return;
+						}
+						else if ((px + py) > (xmin + ymax))
+						{
+							DoHit();
+							return;
+						}
+					}
+				}
+				if (xvel < 0)
+				{
+					yatwall = (slope * xmax) + intercept;
+					if (x < xmax && (yatwall > ymin && yatwall < ymax))
+					{
+						if (px > xmax)
+						{
+							x = xmax;
+							y = yatwall;
+							DoHit();
+							return;
+						}
+						else if ((px + py) > (xmin + ymax))
+						{
+							DoHit();
+							return;
+						}
+					}
+				}
+				if (line_line(px, x, xmin, xmax, py, y, ymax, ymin))
+				{
+					if ((x + y) > (x_intersect + y_intersect))
+					{
+						x = x_intersect;
+						y = y_intersect;
+						if (x > xmax) x = xmax;
+						if (x < xmin) x = xmin;
+						if (y > ymax) y = ymax;
+						if (y < ymin) y = ymin;
+						DoHit();
+						return;
+					}
+				}
+			}
+		}
+		
 		public override function DoHit():void
 		{
 			if (impact != 0) return;
@@ -493,6 +736,38 @@ package vwr.game.spacegame.worldstuff.entities.shots
 		public override function GetType():int
 		{
 			return 1;
+		}
+
+		private var x_intersect:Number;
+		private var y_intersect:Number;
+		
+		private function line_line(x1:Number, x2:Number, x3:Number, x4:Number, y1:Number, y2:Number, y3:Number, y4:Number):Boolean
+		{
+			var x12:Number = x1 - x2;
+			var x34:Number = x3 - x4;
+			var y12:Number = y1 - y2;
+			var y34:Number = y3 - y4;
+			var c:Number = x12 * y34 - y12 * x34;
+			if (fabs(c) < 0.0001)
+			{
+				// No intersection
+				return false;
+			}
+			else
+			{
+				// Intersection
+				var a:Number = x1 * y2 - y1 * x2;
+				var b:Number = x3 * y4 - y3 * x4;
+				x_intersect = (a * x34 - b * x12) / c;
+				y_intersect = (a * y34 - b * y12) / c;
+				return true;
+			}
+		}
+		
+		private function fabs(num:Number):Number
+		{
+			if (num < 0) return -num;
+			else return num;
 		}
 	}
 }

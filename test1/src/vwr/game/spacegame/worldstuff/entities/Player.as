@@ -170,11 +170,12 @@ package vwr.game.spacegame.worldstuff.entities
 			infotext.text = "000";
 			
 			//showhitbox = true;
-			hitwidth = 30;
-			hitheight = 30;
+			hitwidth = 35;
+			hitheight = 35;
 			noclip = false;
 			
 			friction = 0.98;
+			elasticity = 0.3;
         }
 		
 		public function AimAt(xpos:Number, ypos:Number):void

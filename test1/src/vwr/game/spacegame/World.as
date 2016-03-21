@@ -64,7 +64,7 @@ package vwr.game.spacegame
 			entityList.push(player);
 			entityList.push(camera);
 			
-			LoadRoom(2);
+			LoadRoom(roomNum);
 			
 			if (currentRoom != null)
 			{
