@@ -2,6 +2,8 @@ package vwr.game.spacegame
 {
 	import flash.display.Sprite;
 	import flash.geom.Point;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	import vwr.game.spacegame.worldstuff.entities.*;
 	import vwr.game.spacegame.worldstuff.entities.explosions.*;
 	import vwr.game.spacegame.worldstuff.entities.shots.Laser;
@@ -38,6 +40,9 @@ package vwr.game.spacegame
 		private var minx:Number;
 		private var miny:Number;
 		
+		private var infotext:TextField;
+		private var textContainer:Sprite;
+		
 		private var roomNum:int = 2;
 		
 		public function World() 
@@ -73,6 +78,20 @@ package vwr.game.spacegame
 			}
 			camera.x = player.x;
 			camera.y = player.y;
+			
+			infotext = new TextField();
+			infotext.textColor = 0xFFFFAA;
+			var fmt:TextFormat = new TextFormat();
+			fmt.font = "System";
+			infotext.defaultTextFormat = fmt;
+			textContainer = new Sprite();
+			textContainer.addChild(infotext);
+			infotext.x += 20;
+			infotext.y += 10;
+			textContainer.scaleX = 2;
+			textContainer.scaleY = 2;
+			addChild(textContainer);
+			infotext.text = "000";
 		}
 		
 		public function Update():void
@@ -178,6 +197,11 @@ package vwr.game.spacegame
 			scaleX = scaleY = camera.zoom;
 			x = (Main.gameWidth / 2) - (camera.x * camera.zoom);
 			y = (Main.gameHeight / 2) - (camera.y * camera.zoom);
+			
+			setChildIndex(textContainer, numChildren - 1);
+			infotext.text = "entities: " + entityList.length + "\nenemies: " + enemyList.length + "\nshots: " + shotList.length + "\nenemy shots: " + enemyShotList.length + "\nexplosions: " + explosionList.length;
+			textContainer.x = (-x / scaleX) - (scaleX * 25);
+			textContainer.y = (-y / scaleX) - (scaleX * 16);
 			
 			cursor.x = mouseX;
 			cursor.y = mouseY;
