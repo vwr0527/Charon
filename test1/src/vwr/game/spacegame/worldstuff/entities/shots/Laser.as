@@ -429,6 +429,11 @@ package vwr.game.spacegame.worldstuff.entities.shots
 				}
 				if (line_line(px, x, xmin, xmax, py, y, ymin, ymax))
 				{
+					if ((px - py) > (xmin - ymin))
+					{
+						DoHit();
+						return;
+					}
 					if ((x - y) > (x_intersect - y_intersect))
 					{
 						x = x_intersect;
@@ -487,6 +492,11 @@ package vwr.game.spacegame.worldstuff.entities.shots
 				}
 				if (line_line(px, x, xmin, xmax, py, y, ymax, ymin))
 				{
+					if ((px + py) < (xmin + ymax))
+					{
+						DoHit();
+						return;
+					}
 					if ((x + y) < (x_intersect + y_intersect))
 					{
 						x = x_intersect;
@@ -545,6 +555,11 @@ package vwr.game.spacegame.worldstuff.entities.shots
 				}
 				if (line_line(px, x, xmin, xmax, py, y, ymin, ymax))
 				{
+					if ((px - py) < (xmin - ymin))
+					{
+						DoHit();
+						return;
+					}
 					if ((x - y) < (x_intersect - y_intersect))
 					{
 						x = x_intersect;
@@ -603,6 +618,11 @@ package vwr.game.spacegame.worldstuff.entities.shots
 				}
 				if (line_line(px, x, xmin, xmax, py, y, ymax, ymin))
 				{
+					if ((px + py) > (xmin + ymax))
+					{
+						DoHit();
+						return;
+					}
 					if ((x + y) > (x_intersect + y_intersect))
 					{
 						x = x_intersect;
