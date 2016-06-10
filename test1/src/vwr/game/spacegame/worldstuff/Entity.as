@@ -21,10 +21,10 @@ package vwr.game.spacegame.worldstuff
 		public var rotfric:Number = 0.99;
 		public var elasticity:Number = 0.75;
 		private var hitboxGraphic:Shape;
-		public var noclip:Boolean = true;
+		public var noclip:Boolean = false;
 		public var showhitbox:Boolean = false;
 		private static const extraPush:Number = 0.1;
-		protected var enableHighlightTiles:Boolean = false;
+		protected var enableHighlightTiles:Boolean = true;
 		protected var active:Boolean = true;
 		
 		public function Entity() 
@@ -199,12 +199,7 @@ package vwr.game.spacegame.worldstuff
 			var tophit:Boolean = (y - hitheight / 2) > tile.y && (y - hitheight / 2) < tile.y + tile.height;
 			var lefthit:Boolean = (x - hitwidth / 2) > tile.x && (x - hitwidth / 2) < tile.x + tile.width;
 			var righthit:Boolean = (x + hitwidth / 2) > tile.x && (x + hitwidth / 2) < tile.x + tile.width;
-			/*
-			var pbottomhit:Boolean = (py + hitheight / 2) > tile.y + extraPush && (py + hitheight / 2) < tile.y + tile.height - extraPush;
-			var ptophit:Boolean = (py - hitheight / 2) > tile.y + extraPush && (py - hitheight / 2) < tile.y + tile.height - extraPush;
-			var plefthit:Boolean = (px - hitwidth / 2) > tile.x + extraPush && (px - hitwidth / 2) < tile.x + tile.width - extraPush;
-			var prighthit:Boolean = (px + hitwidth / 2) > tile.x + extraPush && (px + hitwidth / 2) < tile.x + tile.width - extraPush;
-			*/
+			
 			var pbottomhit:Boolean = (py + hitheight / 2) > tile.y && (py + hitheight / 2) < tile.y + tile.height;
 			var ptophit:Boolean = (py - hitheight / 2) > tile.y && (py - hitheight / 2) < tile.y + tile.height;
 			var plefthit:Boolean = (px - hitwidth / 2) > tile.x && (px - hitwidth / 2) < tile.x + tile.width;

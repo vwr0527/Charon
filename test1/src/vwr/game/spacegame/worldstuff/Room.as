@@ -194,5 +194,9 @@ package vwr.game.spacegame.worldstuff
 			marker.visible = true;
 			highlightStore.addChild(marker);
 		}
+		public function HighlightTileAt(xp:Number, yp:Number):void
+		{
+			HighlightTile((xp / tileWidth), (yp / tileHeight));
+		}
 	}
 }

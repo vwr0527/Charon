@@ -125,6 +125,26 @@ package vwr.game.spacegame
 		{
 			return keyDown[40];
 		}
+		public static function leftArrow():int
+		{
+			return keyDown[37];
+		}
+		public static function rightArrow():int
+		{
+			return keyDown[39];
+		}
+		public static function p():int
+		{
+			return keyDown[80];
+		}
+		public static function lbrac():int
+		{
+			return keyDown[219];
+		}
+		public static function rbrac():int
+		{
+			return keyDown[221];
+		}
 	}
 
 }
