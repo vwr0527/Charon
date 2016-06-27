@@ -50,20 +50,28 @@ package vwr.game.spacegame.worldstuff
 				var row:Array = new Array();
 				for (var j:int = 0; j < numCols; ++j)
 				{
-					var tile:Tile = null;
-					if (layout[i][j] != 0)
+					var tile:Tile = makeNewTileAt(layout[i][j], i, j);
+					if (tile != null)
 					{
-						tile = makeNewTile(layout[i][j]);
-						tile.x = j * tileWidth;
-						tile.y = i * tileHeight;
-						tile.width = tileWidth;
-						tile.height = tileHeight;
 						addChild(tile);
 					}
 					row.push(tile);
 				}
 				tileGrid.push(row);
 			}
+		}
+		
+		private function makeNewTileAt(id:int, i:int, j:int):Tile
+		{
+			var tile:Tile = makeNewTile(id);
+			if (tile == null) return null;
+			
+			tile.x = j * tileWidth;
+			tile.y = i * tileHeight;
+			tile.width = tileWidth;
+			tile.height = tileHeight;
+			
+			return tile;
 		}
 		
 		private function makeNewTile(id:int):Tile 
@@ -137,53 +145,6 @@ package vwr.game.spacegame.worldstuff
 			setChildIndex(highlightStore, this.numChildren - 1);
 			var marker:Shape = new Shape();
 			var color:uint = 0x009922;
-			
-			/*
-			// for testing purposes
-			if (highlightStore.numChildren == 0)
-			{
-				color = 0x000000;
-			}
-			else if (highlightStore.numChildren == 1)
-			{
-				color = 0xffffff;
-			}
-			else if (highlightStore.numChildren == 2)
-			{
-				
-				color = 0xff0000;
-			}
-			else if (highlightStore.numChildren == 3)
-			{
-				color = 0x00ff00;
-				
-			}
-			else if (highlightStore.numChildren == 4)
-			{
-				
-				color = 0x0000ff;
-			}
-			else if (highlightStore.numChildren == 5)
-			{
-				color = 0xff00ff;
-				
-			}
-			else if (highlightStore.numChildren == 6)
-			{
-				
-				color = 0x00ffff;
-			}
-			else if (highlightStore.numChildren == 7)
-			{
-				color = 0xffff00;
-				
-			}
-			else if (highlightStore.numChildren == 8)
-			{
-				color = 0x888888;
-			}
-			*/
-			
 			marker.graphics.beginFill(color, 0.4);
 			marker.graphics.lineStyle(1, 0xff8822, 0.7);
 			marker.graphics.drawRect(
@@ -194,9 +155,27 @@ package vwr.game.spacegame.worldstuff
 			marker.visible = true;
 			highlightStore.addChild(marker);
 		}
+		
 		public function HighlightTileAt(xp:Number, yp:Number):void
 		{
 			HighlightTile((xp / tileWidth), (yp / tileHeight));
+		}
+		
+		public function SwitchTileAt(xp:Number, yp:Number, tile_id:int):void
+		{
+			var i:int = getIndexAtPosX(xp);
+			var j:int = getIndexAtPosY(yp);
+			
+			if (tileGrid[j][i] != null && contains(tileGrid[j][i]))
+			{
+				removeChild(tileGrid[j][i]);
+			}
+			var newtile:Tile = makeNewTileAt(tile_id, j, i);
+			if (newtile != null)
+			{
+				addChild(newtile);
+			}
+			tileGrid[j][i] = newtile;
 		}
 	}
 }

@@ -12,6 +12,7 @@ package vwr.game.spacegame
 	public class Input extends Sprite
 	{
 		private static var mouseDown:int;
+		private static var wheelDelta:int;
 		private static var keyDown:Array;
 		private var keyBuf:Vector.<int>;
 		private var cover:Shape;
@@ -23,6 +24,7 @@ package vwr.game.spacegame
 			//1 = mouse/key is holding down
 			//3 = mouse/key was pressed and released before update was called once
 			mouseDown = 0;
+			wheelDelta = 0;
 			keyDown = new Array(256);
 			for (var i:int = 0; i < 256; ++i) keyDown[i] = 0;
 			keyBuf = new Vector.<int>();
@@ -38,6 +40,7 @@ package vwr.game.spacegame
 			addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+			addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
 		
@@ -48,7 +51,10 @@ package vwr.game.spacegame
 			else
 			if (mouseDown == 3)
 				mouseDown = 0;
-			
+				
+			if (wheelDelta != 0)
+				wheelDelta = 0;
+				
 			while (keyBuf.length > 0)
 			{
 				var keyCode:int = keyBuf.pop();
@@ -78,6 +84,18 @@ package vwr.game.spacegame
 				mouseDown = 0;
 			if (mouseDown == 2)
 				mouseDown = 3;
+		}
+		
+		private function mouseWheelHandler(event:MouseEvent):void
+		{
+			if (event.delta > 0)
+			{
+				wheelDelta = 1;
+			}
+			if (event.delta < 0)
+			{
+				wheelDelta = -1;
+			}
 		}
 		
 		private function keyDownHandler(event:KeyboardEvent):void
@@ -144,6 +162,10 @@ package vwr.game.spacegame
 		public static function rbrac():int
 		{
 			return keyDown[221];
+		}
+		public static function mWheel():int
+		{
+			return wheelDelta;
 		}
 	}
 

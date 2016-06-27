@@ -24,7 +24,7 @@ package vwr.game.spacegame.worldstuff
 		public var noclip:Boolean = false;
 		public var showhitbox:Boolean = false;
 		private static const extraPush:Number = 0.1;
-		protected var enableHighlightTiles:Boolean = true;
+		protected var enableHighlightTiles:Boolean = false;
 		protected var active:Boolean = true;
 		
 		public function Entity() 

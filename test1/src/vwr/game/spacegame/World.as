@@ -98,6 +98,7 @@ package vwr.game.spacegame
 			infotext.text = "000";
 			
 			lvlEdit = new LevelEditor();
+			addChild(lvlEdit);
 		}
 		
 		public function Update():void
@@ -135,6 +136,8 @@ package vwr.game.spacegame
 			}
 			else
 			{
+				//hide level editor elements
+				lvlEdit.invis();
 				
 				//spawn pending entities
 				while (currentRoom.numToSpawn > 0)
