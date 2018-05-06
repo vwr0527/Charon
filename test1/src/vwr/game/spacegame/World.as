@@ -48,6 +48,8 @@ package vwr.game.spacegame
 		private var roomNum:int = 2;
 		
 		private var lvlEdit:LevelEditor;
+		private var menuActive:Boolean;
+		private var paused:Boolean;
 		
 		public function World() 
 		{
@@ -99,40 +101,35 @@ package vwr.game.spacegame
 			
 			lvlEdit = new LevelEditor();
 			addChild(lvlEdit);
+			
+			menuActive = false;
+			paused = true;
 		}
 		
 		public function Update():void
 		{
-			if (Input.lbrac() == 2)
-			{
-				++roomNum;
-				if (roomNum > 3)
-				{
-					roomNum = 0;
-				}
-				LoadRoom(roomNum);
-			}
-			if (Input.rbrac() == 2)
-			{
-				--roomNum;
-				if (roomNum < 0)
-				{
-					roomNum = 3;
-				}
-				LoadRoom(roomNum);
-			}
+			++sequenceNumber;
+			currentRoom.ResetHighlight();
+			
 			if (Input.p() == 2)
 			{
 				lvlEdit.active = !lvlEdit.active;
 			}
 			
-			++sequenceNumber;
-			
-			currentRoom.ResetHighlight();
-			
-			if (lvlEdit.active)
+			if (paused || lvlEdit.active)
 			{
-				lvlEdit.Update(camera, currentRoom, cursor);
+				if (menuActive)
+				{
+					//show menu
+				}
+				else if (lvlEdit.active)
+				{
+					lvlEdit.Update(camera, currentRoom, cursor);
+				}
+				else
+				{
+					//display "paused"
+				}
 			}
 			else
 			{
@@ -237,6 +234,22 @@ package vwr.game.spacegame
 			cursor.Update();
 			
 			currentRoom.UpdateBG(camera);
+		}
+		
+		public function SwitchLevel(lvlNum:Number):void
+		{
+			roomNum = lvlNum;
+			LoadRoom(roomNum);
+		}
+		
+		public function Pause(p:Boolean):void
+		{
+			paused = p;
+		}
+		
+		public function SetMenuActive(a:Boolean):void
+		{
+			menuActive = a;
 		}
 		
 		private function LoadAllRooms():void

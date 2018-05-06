@@ -9,6 +9,7 @@ package vwr.game.spacegame
 	 * ...
 	 * @author Victor Reynolds
 	 */
+	
 	public class Input extends Sprite
 	{
 		private static var mouseDown:int;
@@ -163,10 +164,13 @@ package vwr.game.spacegame
 		{
 			return keyDown[221];
 		}
+		public static function esc():int
+		{
+			return keyDown[27];
+		}
 		public static function mWheel():int
 		{
 			return wheelDelta;
 		}
 	}
-
 }

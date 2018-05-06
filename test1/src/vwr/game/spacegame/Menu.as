@@ -2,6 +2,9 @@ package vwr.game.spacegame
 {
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
+	import flash.system.fscommand;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	/**
 	 * ...
@@ -19,10 +22,21 @@ package vwr.game.spacegame
 		private var titleBmp:Bitmap;
 		private var title:Sprite;
 		
-		[Embed(source = "/../../sprite/neptune-1.jpg")]
-		private var bgpic:Class;
+		private var infotext:Array;
+		private var textContainer:Array;
+		private var numMenuItems:Number;
+		private var command:String;
+		private var commandPending:Boolean;
+		
+		public var active:Boolean;
+		
 		public function Menu() 
 		{
+			active = false;
+			visible = false;
+			command = "";
+			commandPending = false;
+			
 			titleBmp = new titleresource();
 			title = new Sprite();
 			title.addChild(titleBmp);
@@ -36,21 +50,80 @@ package vwr.game.spacegame
 			title.scaleX = 0.75;
 			title.scaleY = 0.75;
 			title.y -= Main.gameHeight / 4;
+			infotext = new Array();
+			textContainer = new Array();
+			numMenuItems = 0;
 			
-			var bgbmp:Bitmap = new bgpic();
-			bgbmp.x -= bgbmp.bitmapData.width / 2;
-			bgbmp.y -= bgbmp.bitmapData.height / 2;
-			bgbmp.smoothing = true;
-			addChildAt(bgbmp, 0);
+			AddMenuItem("New Game");
+			AddMenuItem("Continue");
+			AddMenuItem("Options");
+			AddMenuItem("Quit");
 		}
 		
-		private var startfade:Boolean = false;
 		public function Update():void
 		{
-			if (Input.mouseButton() == 1) startfade = true;
-			if (startfade) alpha *= 0.9;
-			if (alpha < 0.1) visible = false;
+			if (!active)
+			{
+				visible = false;
+				return;
+			}
+			visible = true;
+			
+			for (var i:int = 0; i < numMenuItems; ++i)
+			{
+				if (mouseY > infotext[i].y - 5 && mouseY < infotext[i].y + 25)
+				{
+					infotext[i].textColor = 0xFFFFFF;
+					if (Input.mouseButton() == 2)
+					{
+						if (i == 3)
+						{
+							fscommand("quit");
+						}
+						if (i == 0 || i == 1)
+						{
+							SetCommand("Game Start");
+						}
+					}
+				}
+				else
+				{
+					infotext[i].textColor = 0xFFFF00;
+				}
+			}
+		}
+		
+		private function AddMenuItem(name:String):void
+		{
+			var fmt:TextFormat = new TextFormat();
+			fmt.font = "System";
+			
+			infotext.push(new TextField());
+			infotext[numMenuItems].textColor = 0xFFFF00;
+			infotext[numMenuItems].defaultTextFormat = fmt;			
+			textContainer.push(new Sprite());
+			textContainer[numMenuItems].addChild(infotext[numMenuItems]);
+			infotext[numMenuItems].y = (30 * numMenuItems) - 30;
+			infotext[numMenuItems].x = -textContainer[numMenuItems].width / 2;
+			addChild(textContainer[numMenuItems]);
+			infotext[numMenuItems].text = name;
+			
+			++numMenuItems;
+		}
+		
+		private function SetCommand(com:String):void
+		{
+			command = com;
+			commandPending = true;
+		}
+		public function IsCommandPending():Boolean
+		{
+			return commandPending;
+		}
+		public function GetCommand():String
+		{
+			commandPending = false;
+			return command;
 		}
 	}
-
 }
