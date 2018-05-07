@@ -20,6 +20,7 @@ package vwr.game.spacegame.worldstuff.entities
 		public function Camera() 
 		{
 			super();
+			noclip = true;
 		}
 		
 		public override function Update():void

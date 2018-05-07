@@ -3,6 +3,7 @@ package vwr.game.spacegame
 	import flash.display.Sprite;
 	import flash.display.Stage;
 	import flash.events.Event;
+	import flash.system.fscommand;
 	import flash.ui.Mouse;
 	/**
 	 * ...
@@ -79,6 +80,10 @@ package vwr.game.spacegame
 					menu.active = false;
 					world.SetMenuActive(menu.active);
 					cinematic.active = false;
+				}
+				else if (menu.GetCommand() == "Quit")
+				{
+					fscommand("quit");
 				}
 			}
         }
