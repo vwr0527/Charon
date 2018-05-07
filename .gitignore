@@ -48,3 +48,8 @@ Temporary Items
 
 # don't include archive files
 /arch
+
+# these are different for each computer
+test1/test1.as3proj
+test1/obj/test1Config.old
+test1/obj/test1Config.xml
