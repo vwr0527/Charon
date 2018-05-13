@@ -71,10 +71,11 @@ package vwr.game.spacegame.worldstuff.entities
 			var pic:Bitmap = new picture();
 			pic.smoothing = true;
 			pic.bitmapData.threshold(pic.bitmapData, pic.bitmapData.rect, new Point(0, 0), "==", 0xffff00ff); //turn pink into transparent
-			pic.scaleX = 0.5;
-			pic.scaleY = 0.5;
-			pic.x = -pic.bitmapData.width / 4;
-			pic.y = -pic.bitmapData.height / 4;
+			var size:Number = 0.5;
+			pic.scaleX = size;
+			pic.scaleY = size;
+			pic.x = -pic.bitmapData.width / (2/size);
+			pic.y = -pic.bitmapData.height / (2/size);
 			pic.alpha = 1.0;
 			addChildAt(pic, 0);
 			
